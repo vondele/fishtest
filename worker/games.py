@@ -40,7 +40,7 @@ def is_64bit():
 
 HTTP_TIMEOUT = 5.0
 
-FISHCOOKING_URL = 'https://github.com/mcostalba/FishCooking'
+FISHCOOKING_URL = 'https://github.com/ianfab/FishCooking'
 ARCH = 'ARCH=x86-64-modern' if is_64bit() else 'ARCH=x86-32'
 EXE_SUFFIX = ''
 MAKE_CMD = 'make profile-build COMP=gcc ' + ARCH

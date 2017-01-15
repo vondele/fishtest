@@ -26,7 +26,7 @@ import zipfile
 from optparse import OptionParser
 from zipfile import ZipFile
 
-FISHCOOKING_URL = 'https://github.com/mcostalba/FishCooking'
+FISHCOOKING_URL = 'https://github.com/ianfab/FishCooking'
 
 LINUX32 = {
   'system': 'linux',
