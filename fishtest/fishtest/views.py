@@ -662,7 +662,7 @@ def tests_view(request):
   run['results_info'] = format_results(results, run)
   run_args = [('id', str(run['_id']), '')]
 
-  for name in ['new_tag', 'new_signature', 'new_options', 'resolved_new',
+  for name in ['variant', 'new_tag', 'new_signature', 'new_options', 'resolved_new',
                'base_tag', 'base_signature', 'base_options', 'resolved_base',
                'sprt', 'num_games', 'spsa', 'tc', 'threads', 'book', 'book_depth',
                'priority', 'internal_priority', 'username', 'tests_repo', 'info']:
