@@ -779,7 +779,7 @@ def tests(request):
       if purged == 0:
         run['finished'] = True
         request.rundb.runs.save(run)
-        post_result(run)
+        #post_result(run)
 
     runs[state].append(run)
 
