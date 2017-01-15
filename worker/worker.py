@@ -25,8 +25,8 @@ def setup_config_file(config_file):
   config.read(config_file)
 
   defaults = [('login', 'username', ''), ('login', 'password', ''),
-              ('parameters', 'host', 'tests.stockfishchess.org'),
-              ('parameters', 'port', '80'),
+              ('parameters', 'host', '35.161.250.236'),
+              ('parameters', 'port', '6543'),
               ('parameters', 'concurrency', '3')]
 
   for v in defaults:
@@ -126,10 +126,6 @@ def main():
     else:
       sys.stderr.write('%s [username] [password]\n' % (sys.argv[0]))
       sys.exit(1)
-
-  # Re-route old IP
-  if '54.235.120.254' in options.host:
-    options.host = 'tests.stockfishchess.org'
 
   # Write command line parameters to the config file
   config.set('login', 'username', args[0])

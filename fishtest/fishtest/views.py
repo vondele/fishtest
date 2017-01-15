@@ -717,7 +717,7 @@ def post_result(run):
   if 'username' in run['args']:
     title += '  (' + run['args']['username'] + ')'
 
-  body = 'http://tests.stockfishchess.org/tests/view/%s\n\n' % (str(run['_id']))
+  body = '35.161.250.236:6543/%s\n\n' % (str(run['_id']))
 
   body += run['start_time'].strftime("%d-%m-%y") + ' from '
   body += run['args'].get('username','') + '\n\n'
