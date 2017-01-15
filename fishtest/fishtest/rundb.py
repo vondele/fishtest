@@ -44,7 +44,7 @@ class RunDb:
       remaining -= task_size
     return tasks
 
-  def new_run(self, base_tag, new_tag, num_games, tc, book, book_depth, threads, base_options, new_options,
+  def new_run(self, variant, base_tag, new_tag, num_games, tc, book, book_depth, threads, base_options, new_options,
               info='',
               resolved_base='',
               resolved_new='',
@@ -64,6 +64,7 @@ class RunDb:
       start_time = datetime.utcnow()
 
     run_args = {
+      'variant' : variant,
       'base_tag': base_tag,
       'new_tag': new_tag,
       'num_games': num_games,

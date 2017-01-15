@@ -18,6 +18,22 @@
     </div>
   </div>
   <div class="control-group">
+    <label class="control-label">Variant:</label>
+    <div class="controls">
+      <select name="variant">
+        <option value="chess">Chess</option>
+        <option value="giveaway">Giveaway</option>
+        <option value="atomic">Atomic</option>
+        <option value="crazyhouse">Crazyhouse</option>
+        <option value="horde">Horde</option>
+        <option value="kingofthehill">King of the Hill</option>
+        <option value="losers">Losers</option>
+        <option value="racingkings">Racing Kings</option>
+        <option value="threecheck">Three-check</option>
+      </select>
+    </div>
+  </div>
+  <div class="control-group">
     <label class="control-label">Test branch:</label>
     <div class="controls">
       <input name="test-branch" value="${args.get('new_tag', '')}" ${'readonly' if re_run else ''}>

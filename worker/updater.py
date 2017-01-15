@@ -7,7 +7,7 @@ import sys
 from zipfile import ZipFile
 from distutils.dir_util import copy_tree
 
-WORKER_URL = 'https://github.com/glinscott/fishtest/archive/master.zip'
+WORKER_URL = 'https://github.com/ianfab/fishtest/archive/master.zip'
 
 def restart(worker_dir):
   """Restarts the worker, using the same arguments"""

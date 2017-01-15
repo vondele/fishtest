@@ -242,6 +242,7 @@ def parse_spsa_params(raw, spsa):
 
 def validate_form(request):
   data = {
+    'variant' : request.POST['variant'],
     'base_tag' : request.POST['base-branch'],
     'new_tag' : request.POST['test-branch'],
     'tc' : request.POST['tc'],

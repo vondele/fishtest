@@ -33,15 +33,12 @@
           <li><a href="/users/monthly">Top Month</a></li>
           <li><a href="/actions">Actions</a></li>
           <li><a href="https://github.com/glinscott/fishtest/wiki" target="_blank">Help</a></li>
-          <li><a href="http://chatwing.com/stockfish" target="_blank">Chat</a></li>
           <li class="nav-header">Links</li>
-          <li><a href="https://github.com/glinscott/fishtest" target="_blank">Github</a></li>
-          <li><a href="https://groups.google.com/forum/?fromgroups=#!forum/fishcooking" target="_blank">Forum</a></li>
-          <li><a href="https://groups.google.com/forum/?fromgroups=#!forum/fishcooking_results" target="_blank">History</a></li>
-          <li><a href="/regression">Regression</a></li>
-          <!--<li><a href="http://bit.ly/11QsIkd" target="_blank">Regression</a></li>-->
-          <li><a href="http://abrok.eu/stockfish/" target="_blank">Compiles</a></li>
-          <li><a href="https://github.com/official-stockfish/Stockfish" target="_blank">SF-github</a></li>          
+          <li><a href="https://github.com/ianfab/fishtest" target="_blank">Github</a></li>
+          <li><a href="https://github.com/ddugovic/Stockfish/issues" target="_blank">Issues</a></li>
+          <li><a href="https://github.com/ddugovic/Stockfish/issues/170" target="_blank">Regression</a></li>
+          <li><a href="https://github.com/niklasf/Stockfish/releases" target="_blank">Compiles</a></li>
+          <li><a href="https://github.com/ddugovic/Stockfish" target="_blank">SF-github</a></li>
           <li class="nav-header">Admin</li>
           <li><a href="/signup">Register</a></li>
         </ul>
