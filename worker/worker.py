@@ -162,7 +162,7 @@ def main():
   global ALIVE
   while ALIVE:
     if not success:
-      time.sleep(1800)
+      time.sleep(300)
     success = worker(worker_info, args[1], remote)
 
 if __name__ == '__main__':
