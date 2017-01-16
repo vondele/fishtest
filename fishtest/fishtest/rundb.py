@@ -115,7 +115,7 @@ class RunDb:
       return self.runs.find_one(q)
     base_approval = get_approval(resolved_base)
     new_approval = get_approval(resolved_new)
-    allow_auto = username in ['mcostalba', 'jkiiski', 'glinscott', 'lbraesch'] 
+    allow_auto = username in ['ianfab']
     if base_approval != None and new_approval != None and allow_auto:
       new_run['approved'] = True
       new_run['approver'] = new_approval['approver']
