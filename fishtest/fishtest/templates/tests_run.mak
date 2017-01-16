@@ -86,7 +86,7 @@
   <div class="control-group stop_rule numgames spsa">
     <label class="control-label">Number of games:</label>
     <div class="controls">
-      <input name="num-games" value="${args.get('num_games', 20000)}">
+      <input name="num-games" value="${args.get('num_games', 10000)}">
     </div>
   </div>
   <div class="control-group stop_rule sprt">
@@ -98,7 +98,7 @@
   <div class="control-group stop_rule sprt">
     <label class="control-label">SPRT Elo1:</label>
     <div class="controls">
-      <input name="sprt_elo1" value="${args.get('sprt', {'elo1': 5})['elo1']}">
+      <input name="sprt_elo1" value="${args.get('sprt', {'elo1': 10})['elo1']}">
     </div>
   </div>
   <div class="control-group stop_rule spsa">
@@ -222,7 +222,7 @@ $(function() {
 
   $('#fast_test').click(function() {
     $('input[name=sprt_elo0]').val('0');
-    $('input[name=sprt_elo1]').val('5');
+    $('input[name=sprt_elo1]').val('10');
     $('input[name=tc]').val('10+0.1');
     $('input[name=new-options]').val('Hash=4');
     $('input[name=base-options]').val('Hash=4');
@@ -230,10 +230,10 @@ $(function() {
 
   $('#slow_test').click(function() {
     $('input[name=sprt_elo0]').val('0');
-    $('input[name=sprt_elo1]').val('5');
-    $('input[name=tc]').val('60+0.6');
-    $('input[name=new-options]').val('Hash=64');
-    $('input[name=base-options]').val('Hash=64');
+    $('input[name=sprt_elo1]').val('10');
+    $('input[name=tc]').val('30+0.3');
+    $('input[name=new-options]').val('Hash=32');
+    $('input[name=base-options]').val('Hash=32');
   });
 });
 </script>
