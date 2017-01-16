@@ -353,8 +353,8 @@ class RunDb:
   def approve_run(self, run_id, approver):
     run = self.get_run(run_id)
     # Can't self approve
-    if run['args']['username'] == approver:
-      return False
+    #if run['args']['username'] == approver:
+      #return False
 
     run['approved'] = True
     run['approver'] = approver
