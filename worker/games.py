@@ -41,6 +41,7 @@ def is_64bit():
 HTTP_TIMEOUT = 5.0
 
 FISHCOOKING_URL = 'https://github.com/ianfab/FishCooking'
+BOOKS_URL = 'https://github.com/ianfab/books'
 ARCH = 'ARCH=x86-64-modern' if is_64bit() else 'ARCH=x86-32'
 EXE_SUFFIX = ''
 MAKE_CMD = 'make profile-build COMP=gcc ' + ARCH
@@ -93,9 +94,9 @@ def verify_signature(engine, signature, remote, payload, concurrency):
 
   return bench_nps
 
-def setup(item, testing_dir):
+def setup(item, testing_dir, url = FISHCOOKING_URL):
   """Download item from FishCooking to testing_dir"""
-  tree = requests.get(github_api(FISHCOOKING_URL) + '/git/trees/setup', timeout=HTTP_TIMEOUT).json()
+  tree = requests.get(github_api(url) + '/git/trees/setup', timeout=HTTP_TIMEOUT).json()
   for blob in tree['tree']:
     if blob['path'] == item:
       print 'Downloading %s ...' % (item)
@@ -389,7 +390,7 @@ def run_games(worker_info, password, remote, run, task_id):
 
   # Download book if not already existing
   if not os.path.exists(os.path.join(testing_dir, book)):
-    setup(book, testing_dir)
+    setup(book, testing_dir, BOOKS_URL)
 
   # Download cutechess if not already existing
   if not os.path.exists(cutechess):
