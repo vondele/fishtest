@@ -1,7 +1,7 @@
 (function() {
   var current_jl_testid, fishtest_data, jl_data;
 
-  function draw_fishtest() {
+  function draw_fishtest(variant) {
     var data = !fishtest_data || fishtest_data.length < 1 ? [] : fishtest_data;
 
     data.sort(function(a, b) {
@@ -29,11 +29,13 @@
     });
 
     for (var i = 0; i < data.length; i++) {
-      datatable.addRow([data[i].commit,
-        parseFloat(data[i].elo),
-        parseFloat(data[i].elo) + parseFloat(data[i].error),
-        parseFloat(data[i].elo) - parseFloat(data[i].error)
-      ]);
+      if (data[i].variant == variant) {
+        datatable.addRow([data[i].commit,
+            parseFloat(data[i].elo),
+            parseFloat(data[i].elo) + parseFloat(data[i].error),
+            parseFloat(data[i].elo) - parseFloat(data[i].error)
+        ]);
+      }
     }
 
     var options_lines = {
@@ -53,6 +55,8 @@
         slantedTextAngle: 70
       }
     };
+
+    $("#btn_select_fishtest_test_caption").html(variant);
 
     var fishtest_graph = new google.visualization.LineChart(document.getElementById('fishtest_graph'));
     fishtest_graph.draw(datatable, options_lines);
@@ -257,7 +261,16 @@
             }
           })
 
-          draw_fishtest();
+          var variants = new Array();
+          variants[0] = "chess";
+
+          for (j = 0; j < fishtest_data.length; j++) {
+            if (variants.indexOf(fishtest_data[j].variant) == -1) {
+                variants.push(fishtest_data[j].variant);
+            }
+          }
+
+          draw_fishtest(variants[0]);
           draw_jl_tests(0);
 
           if (!jl_data || jl_data.length < 1) return;
@@ -266,8 +279,16 @@
             $("#dropdown_jl_tests").append("<li><a test_id=\"" + j + "\" >" + jl_data[j].description + "</a></li>");
           }
 
+          for (j = 0; j < variants.length; j++) {
+            $("#dropdown_fishtest_tests").append("<li><a variant=\"" + variants[j] + "\" >" + variants[j] + "</a></li>");
+          }
+
           $("#dropdown_jl_tests").find('a').on('click', function() {
             draw_jl_tests($(this).attr('test_id'));
+          });
+
+          $("#dropdown_fishtest_tests").find('a').on('click', function() {
+            draw_fishtest($(this).attr('variant'));
           });
 
         })
