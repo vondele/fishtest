@@ -3,6 +3,7 @@
 
   function draw_fishtest(variant) {
     var data = !fishtest_data || fishtest_data.length < 1 ? [] : fishtest_data;
+    data = data.filter(function (el) {return el.variant == variant});
 
     data.sort(function(a, b) {
       var d1 = new Date(a.date_committed),
@@ -29,13 +30,11 @@
     });
 
     for (var i = 0; i < data.length; i++) {
-      if (data[i].variant == variant) {
-        datatable.addRow([data[i].commit,
-            parseFloat(data[i].elo),
-            parseFloat(data[i].elo) + parseFloat(data[i].error),
-            parseFloat(data[i].elo) - parseFloat(data[i].error)
-        ]);
-      }
+      datatable.addRow([data[i].commit,
+          parseFloat(data[i].elo),
+          parseFloat(data[i].elo) + parseFloat(data[i].error),
+          parseFloat(data[i].elo) - parseFloat(data[i].error)
+      ]);
     }
 
     var options_lines = {
@@ -61,7 +60,7 @@
     var fishtest_graph = new google.visualization.LineChart(document.getElementById('fishtest_graph'));
     fishtest_graph.draw(datatable, options_lines);
 
-    update_table_of_standings(fishtest_data, "fishtest", "#table_standings_fishtest");
+    update_table_of_standings(data, "fishtest", "#table_standings_fishtest");
 
     google.visualization.events.addListener(fishtest_graph, 'select', function(e) {
       if (fishtest_graph.getSelection()[0]) {
