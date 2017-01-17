@@ -43,7 +43,7 @@
       </table>
 </div>
 
-<h4 style="margin-top: 70px; margin-bottom: 20px;">Tournament regression tests carried out by Jens Lehmann</h4>
+<h4 style="margin-top: 70px; margin-bottom: 20px;">Offline regression tests</h4>
 
 <div class="btn-group">
   <button class="btn btn-default dropdown-toggle" data-toggle="dropdown" id=
@@ -75,7 +75,7 @@
 
     <div style="margin-bottom: 70px; margin-top: 100px;">
       <h4>Link to old results</h4>
-      <a href="http://bit.ly/11QsIkd" target="_blank">http://bit.ly/11QsIkd</a>
+      <a href="https://github.com/ddugovic/Stockfish/issues/170" target="_blank">https://github.com/ddugovic/Stockfish/issues/170</a>
     </div>
   </div>
 

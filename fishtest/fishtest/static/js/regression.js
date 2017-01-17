@@ -123,7 +123,7 @@
 
     google.visualization.events.addListener(graph, 'select', function(e) {
       if (graph.getSelection()[0]) {
-        window.open('https://github.com/official-stockfish/Stockfish/commit/' + data[graph.getSelection()[0]['row']].sha, '_blank');
+        window.open('https://github.com/niklasf/Stockfish/commit/' + data[graph.getSelection()[0]['row']].sha, '_blank');
       }
     });
 
@@ -200,8 +200,8 @@
 
   function update_table_of_standings(data, test_type, element) {
 
-    var github_commit_link = "https://github.com/official-stockfish/Stockfish/commit/";
-    var github_compare_link = "https://github.com/official-stockfish/Stockfish/compare/";
+    var github_commit_link = "https://github.com/niklasf/Stockfish/commit/";
+    var github_compare_link = "https://github.com/niklasf/Stockfish/compare/";
 
     $(element + " tbody").html("");
 
