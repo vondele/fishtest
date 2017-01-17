@@ -31,7 +31,7 @@
   "btn_select_fishtest_test_caption">Select Variant</span>&nbsp;<span class=
   "caret"></span></button>
 
-  <ul class="dropdown-menu" id="dropdown_fishtest"></ul>
+  <ul class="dropdown-menu" id="dropdown_fishtest_tests"></ul>
   <div class="btn-group" role="group" style="margin-left: 10px;">
     <a href="/regression/data?type=fishtest" class="btn btn-default" role="button">Update Data</a>
   </div>
