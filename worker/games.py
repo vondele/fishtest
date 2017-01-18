@@ -446,7 +446,7 @@ def run_games(worker_info, password, remote, run, task_id):
     # Run cutechess-cli binary
     cmd = [ cutechess, '-repeat', '-rounds', str(games_to_play), '-tournament', 'gauntlet'] + pgnout + \
           ['-srand', "%d" % struct.unpack("<L", os.urandom(struct.calcsize("<L")))] + \
-          ['-resign', 'movecount=3', 'score=400', '-draw', 'movenumber=34',
+          ['-resign', 'movecount=8', 'score=800', '-draw', 'movenumber=34',
            'movecount=8', 'score=20', '-concurrency', str(games_concurrency)] + pgn_cmd + \
           ['-variant', run['args']['variant']] + \
           ['-engine', 'name=stockfish', 'cmd=stockfish'] + new_options + ['_spsa_'] + \
