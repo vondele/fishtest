@@ -58,7 +58,7 @@ class RunDb:
               spsa=None,
               username=None,
               tests_repo=None,
-              throughput=1000,
+              throughput=200,
               priority=0):
     if start_time == None:
       start_time = datetime.utcnow()
