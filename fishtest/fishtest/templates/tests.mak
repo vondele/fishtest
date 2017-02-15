@@ -4,6 +4,10 @@
 
 <h2>Stockfish Testing Queue</h2>
 
+%if filter:
+<h3>Filter: ${filter}</h3>
+%endif
+
 %if page_idx == 0:
 
 <h3>Pending - ${len(runs['pending'])} tests ${pending_hours} hrs <button id="pending-button" class="btn" data-toggle="collapse" data-target="#pending">Show</button></h3>
