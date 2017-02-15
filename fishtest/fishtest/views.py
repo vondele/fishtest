@@ -741,8 +741,10 @@ def post_result(run):
 
 @view_config(route_name='tests', renderer='tests.mak')
 @view_config(route_name='tests_user', renderer='tests.mak')
+@view_config(route_name='tests_variant', renderer='tests.mak')
 def tests(request):
   username = request.matchdict.get('username', '')
+  variant = request.matchdict.get('variant', '')
   success_only = len(request.params.get('success_only', '')) > 0
 
   runs = { 'pending':[], 'failed':[], 'active':[], 'finished':[] }
@@ -751,6 +753,8 @@ def tests(request):
   for run in unfinished_runs:
     # Is username filtering on?  If so, match just runs from that user
     if len(username) > 0 and run['args'].get('username', '') != username:
+      continue
+    if len(variant) > 0 and run['args'].get('variant', '') != variant:
       continue
 
     results = request.rundb.get_results(run)
@@ -826,7 +830,7 @@ def tests(request):
   # Pagination
   page = max(0, int(request.params.get('page', 1)) - 1)
   page_size = 50
-  finished, num_finished = request.rundb.get_finished_runs(skip=page*page_size, limit=page_size, username=username, success_only=success_only)
+  finished, num_finished = request.rundb.get_finished_runs(skip=page*page_size, limit=page_size, username=username, variant=variant, success_only=success_only)
   runs['finished'] += finished
 
   for run in finished:
