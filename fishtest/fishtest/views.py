@@ -859,9 +859,9 @@ def tests(request):
     'pages': pages,
     'machines': machines,
     'show_machines': len(username) == 0,
-    'filter': '' + ", ".join(['variant = %s' % variant] if variant else [] + \
-                             ['username = %s' % username] if username else [] + \
-                             ['success_only = %s' % success_only] if success_only else []),
+    'filter': '' + ", ".join((['variant = %s' % variant] if variant else []) + \
+                             (['username = %s' % username] if username else []) + \
+                             (['success_only = %s' % success_only] if success_only else [])),
     'pending_hours': '%.1f' % (pending_hours),
     'games_played': games_played,
     'cores': cores,
