@@ -39,6 +39,7 @@
           <li><a href="/regression">Regression</a></li>
           <li><a href="https://github.com/niklasf/Stockfish/releases" target="_blank">Compiles</a></li>
           <li><a href="https://github.com/ddugovic/Stockfish" target="_blank">SF-github</a></li>
+          <li><a href="https://hxim.github.io/Stockfish-Evaluation-Guide/" target="_blank">EvalGuide</a></li>
           <li class="nav-header">Admin</li>
           <li><a href="/signup">Register</a></li>
         </ul>
