@@ -41,6 +41,7 @@
 <div>
 <table class="table_standings" id="table_standings_fishtest">
       <thead><tr>
+        <th>Date Committed</th>
         <th>Commit SHA</th>
         <th>Test Details</th>
         <th>Elo</th>
