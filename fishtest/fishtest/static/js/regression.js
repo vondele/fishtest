@@ -29,11 +29,13 @@
       role: 'interval'
     });
 
+    var elo_sum = 0;
     for (var i = 0; i < data.length; i++) {
+      elo_sum += parseFloat(data[i].elo);
       datatable.addRow([data[i].commit,
-          parseFloat(data[i].elo),
-          parseFloat(data[i].elo) + parseFloat(data[i].error),
-          parseFloat(data[i].elo) - parseFloat(data[i].error)
+          elo_sum,
+          elo_sum + parseFloat(data[i].error),
+          elo_sum - parseFloat(data[i].error)
       ]);
     }
 
@@ -96,11 +98,13 @@
       role: 'interval'
     });
 
+    var elo_sum = 0;
     for (var i = 0; i < data.length; i++) {
+      elo_sum += parseFloat(data[i].elo);
       datatable.addRow([data[i].sha.substring(0, 7),
-        parseFloat(data[i].elo),
-        parseFloat(data[i].elo) + parseFloat(data[i].error),
-        parseFloat(data[i].elo) - parseFloat(data[i].error)
+        elo_sum,
+        elo_sum + parseFloat(data[i].error),
+        elo_sum - parseFloat(data[i].error)
       ]);
     }
 
@@ -208,7 +212,10 @@
 
     $(element + " tbody").html("");
 
+    var elo_sum = 0;
     for (var i = 0; i < data.length; i++) {
+
+      elo_sum += parseFloat(data[i].elo);
 
       var commit_field = test_type == "fishtest" ? "commit" : "sha";
 
@@ -222,13 +229,13 @@
         github_commit_link + data[i][commit_field] +
         "\" target=\"_blank\">" + data[i][commit_field].substring(0, 7) + "</a></td>"
 
-      var elo = "<td>" + (Math.round(data[i].elo * 100) / 100) + " ± " +
+      var elo = "<td>" + (Math.round(elo_sum * 100) / 100) + " ± " +
         (Math.round(data[i].error * 100) / 100) + "</td>";
 
       var change = i == 0 ? "<td></td>" :
         "<td style=\"background-color: " +
-        elo_change_color(data[i].elo - data[i - 1].elo) + "\">" +
-        (Math.round((data[i].elo - data[i - 1].elo) * 100) / 100) + " </td>";
+        elo_change_color(data[i].elo) + "\">" +
+        (Math.round((data[i].elo) * 100) / 100) + " </td>";
 
       var diff = i == 0 ? "<td></td>" :
         "<td><a class=\"btn btn-default\" href=\"" + github_compare_link +
