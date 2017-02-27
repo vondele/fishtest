@@ -278,8 +278,6 @@
           draw_fishtest(variants[0]);
           draw_jl_tests(0);
 
-          if (!jl_data || jl_data.length < 1) return;
-
           for (j = 0; j < jl_data.length; j++) {
             $("#dropdown_jl_tests").append("<li><a test_id=\"" + j + "\" >" + jl_data[j].description + "</a></li>");
           }
