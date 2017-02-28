@@ -67,7 +67,7 @@
     update_table_of_standings(data, "fishtest", "#table_standings_fishtest");
 
     google.visualization.events.addListener(fishtest_graph, 'select', function(e) {
-      if (fishtest_graph.getSelection()[0]) {
+      if (fishtest_graph.getSelection()[0] && data[fishtest_graph.getSelection()[0]['row']].link.length > 1) {
         window.open('tests/view/' + data[fishtest_graph.getSelection()[0]['row']].link, '_blank');
       }
     });
