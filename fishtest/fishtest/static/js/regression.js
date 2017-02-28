@@ -30,12 +30,14 @@
     });
 
     var elo_sum = 0;
+    var error_sum = 0;
     for (var i = 0; i < data.length; i++) {
       elo_sum += parseFloat(data[i].elo);
+      error_sum = Math.sqrt(Math.pow(error_sum, 2) + Math.pow(data[i].error, 2));
       datatable.addRow([data[i].commit,
           elo_sum,
-          elo_sum + parseFloat(data[i].error),
-          elo_sum - parseFloat(data[i].error)
+          elo_sum + error_sum,
+          elo_sum - error_sum
       ]);
     }
 
@@ -213,9 +215,11 @@
     $(element + " tbody").html("");
 
     var elo_sum = 0;
+    var error_sum = 0;
     for (var i = 0; i < data.length; i++) {
 
       elo_sum += parseFloat(data[i].elo);
+      error_sum = Math.sqrt(Math.pow(error_sum, 2) + Math.pow(data[i].error, 2));
 
       var commit_field = test_type == "fishtest" ? "commit" : "sha";
 
@@ -229,12 +233,13 @@
         "\" target=\"_blank\">" + data[i][commit_field].substring(0, 7) + "</a></td>"
 
       var elo = "<td>" + (Math.round(elo_sum * 100) / 100) + " ± " +
-        (Math.round(data[i].error * 100) / 100) + "</td>";
+        (Math.round(error_sum * 100) / 100) + "</td>";
 
       var change = i == 0 ? "<td></td>" :
         "<td style=\"background-color: " +
         elo_change_color(data[i].elo) + "\">" +
-        (Math.round((data[i].elo) * 100) / 100) + " </td>";
+        (Math.round((data[i].elo) * 100) / 100) + " ± " +
+        (Math.round(data[i].error * 100) / 100) + " </td>";
 
       var diff = i == 0 ? "<td></td>" :
         "<td><a class=\"btn btn-default\" href=\"" + github_compare_link +
