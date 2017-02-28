@@ -16,7 +16,7 @@
     });
 
     var datatable = new google.visualization.DataTable();
-    datatable.addColumn('string', 'commit');
+    datatable.addColumn('string', 'date');
     datatable.addColumn('number', 'elo');
     datatable.addColumn({
       id: 'eloplus',
@@ -34,7 +34,7 @@
     for (var i = 0; i < data.length; i++) {
       elo_sum += parseFloat(data[i].elo);
       error_sum = Math.sqrt(Math.pow(error_sum, 2) + Math.pow(data[i].error, 2));
-      datatable.addRow([data[i].commit,
+      datatable.addRow([(new Date(data[i].date_committed)).toDateString(),
           elo_sum,
           elo_sum + error_sum,
           elo_sum - error_sum
@@ -55,7 +55,7 @@
       },
       hAxis: {
         slantedText: true,
-        slantedTextAngle: 70
+        slantedTextAngle: 45
       }
     };
 
@@ -226,7 +226,7 @@
       var link = test_type != "fishtest" ? "" :
         "<td><a target=\"_blank\" href=\"tests\/view\/" + data[i].link + "\">details</a></td>";
 
-      var date_committed = "<td>" + (new Date(data[i].date_committed)).toString() + "</td>";
+      var date_committed = "<td>" + (new Date(data[i].date_committed)).toDateString() + "</td>";
 
       var sha = "<td><a href=\"" +
         github_commit_link + data[i][commit_field] +
