@@ -267,13 +267,14 @@
           })
 
           var variants = new Array();
-          variants[0] = "chess";
 
           for (j = 0; j < fishtest_data.length; j++) {
             if (variants.indexOf(fishtest_data[j].variant) == -1) {
                 variants.push(fishtest_data[j].variant);
             }
           }
+          if (variants.length == 0)
+            variants[0] = "chess";
 
           draw_fishtest(variants[0]);
           draw_jl_tests(0);
