@@ -43,7 +43,7 @@
   <div class="control-group">
     <label class="control-label">Test options:</label>
     <div class="controls">
-    <input name="new-options" value="${args.get('new_options', 'Hash=4')}">
+    <input name="new-options" value="${args.get('new_options', 'Hash=4 Move Overhead=100')}">
     </div>
   </div>
   <div class="control-group">
@@ -61,7 +61,7 @@
   <div class="control-group">
     <label class="control-label">Base options:</label>
     <div class="controls">
-    <input name="base-options" value="${args.get('base_options', 'Hash=4')}">
+    <input name="base-options" value="${args.get('base_options', 'Hash=4 Move Overhead=100')}">
     </div>
   </div>
   <div class="control-group">
@@ -225,16 +225,16 @@ $(function() {
     $('input[name=sprt_elo0]').val('0');
     $('input[name=sprt_elo1]').val('10');
     $('input[name=tc]').val('10+0.1');
-    $('input[name=new-options]').val('Hash=4');
-    $('input[name=base-options]').val('Hash=4');
+    $('input[name=new-options]').val('Hash=4 Move Overhead=100');
+    $('input[name=base-options]').val('Hash=4 Move Overhead=100');
   });
 
   $('#slow_test').click(function() {
     $('input[name=sprt_elo0]').val('0');
     $('input[name=sprt_elo1]').val('10');
     $('input[name=tc]').val('30+0.3');
-    $('input[name=new-options]').val('Hash=32');
-    $('input[name=base-options]').val('Hash=32');
+    $('input[name=new-options]').val('Hash=32 Move Overhead=100');
+    $('input[name=base-options]').val('Hash=32 Move Overhead=100');
   });
 });
 </script>
