@@ -242,6 +242,7 @@ def parse_spsa_params(raw, spsa):
 
 def validate_form(request):
   data = {
+    'variant' : request.POST['variant'],
     'base_tag' : request.POST['base-branch'],
     'new_tag' : request.POST['test-branch'],
     'tc' : request.POST['tc'],
@@ -661,7 +662,7 @@ def tests_view(request):
   run['results_info'] = format_results(results, run)
   run_args = [('id', str(run['_id']), '')]
 
-  for name in ['new_tag', 'new_signature', 'new_options', 'resolved_new',
+  for name in ['variant', 'new_tag', 'new_signature', 'new_options', 'resolved_new',
                'base_tag', 'base_signature', 'base_options', 'resolved_base',
                'sprt', 'num_games', 'spsa', 'tc', 'threads', 'book', 'book_depth',
                'priority', 'internal_priority', 'username', 'tests_repo', 'info']:
@@ -716,7 +717,7 @@ def post_result(run):
   if 'username' in run['args']:
     title += '  (' + run['args']['username'] + ')'
 
-  body = 'http://tests.stockfishchess.org/tests/view/%s\n\n' % (str(run['_id']))
+  body = '35.161.250.236:6543/%s\n\n' % (str(run['_id']))
 
   body += run['start_time'].strftime("%d-%m-%y") + ' from '
   body += run['args'].get('username','') + '\n\n'
@@ -740,8 +741,10 @@ def post_result(run):
 
 @view_config(route_name='tests', renderer='tests.mak')
 @view_config(route_name='tests_user', renderer='tests.mak')
+@view_config(route_name='tests_variant', renderer='tests.mak')
 def tests(request):
   username = request.matchdict.get('username', '')
+  variant = request.matchdict.get('variant', '')
   success_only = len(request.params.get('success_only', '')) > 0
 
   runs = { 'pending':[], 'failed':[], 'active':[], 'finished':[] }
@@ -750,6 +753,8 @@ def tests(request):
   for run in unfinished_runs:
     # Is username filtering on?  If so, match just runs from that user
     if len(username) > 0 and run['args'].get('username', '') != username:
+      continue
+    if len(variant) > 0 and run['args'].get('variant', '') != variant:
       continue
 
     results = request.rundb.get_results(run)
@@ -778,7 +783,7 @@ def tests(request):
       if purged == 0:
         run['finished'] = True
         request.rundb.runs.save(run)
-        post_result(run)
+        #post_result(run)
 
     runs[state].append(run)
 
@@ -825,7 +830,7 @@ def tests(request):
   # Pagination
   page = max(0, int(request.params.get('page', 1)) - 1)
   page_size = 50
-  finished, num_finished = request.rundb.get_finished_runs(skip=page*page_size, limit=page_size, username=username, success_only=success_only)
+  finished, num_finished = request.rundb.get_finished_runs(skip=page*page_size, limit=page_size, username=username, variant=variant, success_only=success_only)
   runs['finished'] += finished
 
   for run in finished:
@@ -854,6 +859,9 @@ def tests(request):
     'pages': pages,
     'machines': machines,
     'show_machines': len(username) == 0,
+    'filter': '' + ", ".join((['variant = %s' % variant] if variant else []) + \
+                             (['username = %s' % username] if username else []) + \
+                             (['success_only = %s' % success_only] if success_only else [])),
     'pending_hours': '%.1f' % (pending_hours),
     'games_played': games_played,
     'cores': cores,

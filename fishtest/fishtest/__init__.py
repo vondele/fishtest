@@ -15,6 +15,8 @@ def main(global_config, **settings):
                         session_factory=session_factory,
                         root_factory='fishtest.models.RootFactory')
 
+  config.include('pyramid_mako')
+
   # Authentication
   with open(os.path.expanduser('~/fishtest.secret'), 'r') as f:
     secret = f.read()
@@ -55,6 +57,7 @@ def main(global_config, **settings):
   config.add_route('tests_approve', '/tests/approve')
   config.add_route('tests_purge', '/tests/purge')
   config.add_route('tests_user', '/tests/user/{username}')
+  config.add_route('tests_variant', '/tests/variant/{variant}')
 
   # API
   config.add_route('api_request_task', '/api/request_task')

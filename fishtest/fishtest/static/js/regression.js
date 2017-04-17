@@ -1,8 +1,9 @@
 (function() {
   var current_jl_testid, fishtest_data, jl_data;
 
-  function draw_fishtest() {
+  function draw_fishtest(variant) {
     var data = !fishtest_data || fishtest_data.length < 1 ? [] : fishtest_data;
+    data = data.filter(function (el) {return el.variant == variant});
 
     data.sort(function(a, b) {
       var d1 = new Date(a.date_committed),
@@ -15,7 +16,7 @@
     });
 
     var datatable = new google.visualization.DataTable();
-    datatable.addColumn('string', 'commit');
+    datatable.addColumn('string', 'date');
     datatable.addColumn('number', 'elo');
     datatable.addColumn({
       id: 'eloplus',
@@ -28,11 +29,15 @@
       role: 'interval'
     });
 
+    var elo_sum = 0;
+    var error_sum = 0;
     for (var i = 0; i < data.length; i++) {
-      datatable.addRow([data[i].commit,
-        parseFloat(data[i].elo),
-        parseFloat(data[i].elo) + parseFloat(data[i].error),
-        parseFloat(data[i].elo) - parseFloat(data[i].error)
+      elo_sum += parseFloat(data[i].elo);
+      error_sum = Math.sqrt(Math.pow(error_sum, 2) + Math.pow(data[i].error, 2));
+      datatable.addRow([(new Date(data[i].date_committed)).toDateString(),
+          elo_sum,
+          elo_sum + error_sum,
+          elo_sum - error_sum
       ]);
     }
 
@@ -50,17 +55,19 @@
       },
       hAxis: {
         slantedText: true,
-        slantedTextAngle: 70
+        slantedTextAngle: 45
       }
     };
+
+    $("#btn_select_fishtest_test_caption").html(variant);
 
     var fishtest_graph = new google.visualization.LineChart(document.getElementById('fishtest_graph'));
     fishtest_graph.draw(datatable, options_lines);
 
-    update_table_of_standings(fishtest_data, "fishtest", "#table_standings_fishtest");
+    update_table_of_standings(data, "fishtest", "#table_standings_fishtest");
 
     google.visualization.events.addListener(fishtest_graph, 'select', function(e) {
-      if (fishtest_graph.getSelection()[0]) {
+      if (fishtest_graph.getSelection()[0] && data[fishtest_graph.getSelection()[0]['row']].link.length > 1) {
         window.open('tests/view/' + data[fishtest_graph.getSelection()[0]['row']].link, '_blank');
       }
     });
@@ -93,11 +100,13 @@
       role: 'interval'
     });
 
+    var elo_sum = 0;
     for (var i = 0; i < data.length; i++) {
+      elo_sum += parseFloat(data[i].elo);
       datatable.addRow([data[i].sha.substring(0, 7),
-        parseFloat(data[i].elo),
-        parseFloat(data[i].elo) + parseFloat(data[i].error),
-        parseFloat(data[i].elo) - parseFloat(data[i].error)
+        elo_sum,
+        elo_sum + parseFloat(data[i].error),
+        elo_sum - parseFloat(data[i].error)
       ]);
     }
 
@@ -123,7 +132,7 @@
 
     google.visualization.events.addListener(graph, 'select', function(e) {
       if (graph.getSelection()[0]) {
-        window.open('https://github.com/official-stockfish/Stockfish/commit/' + data[graph.getSelection()[0]['row']].sha, '_blank');
+        window.open('https://github.com/niklasf/Stockfish/commit/' + data[graph.getSelection()[0]['row']].sha, '_blank');
       }
     });
 
@@ -200,32 +209,38 @@
 
   function update_table_of_standings(data, test_type, element) {
 
-    var github_commit_link = "https://github.com/official-stockfish/Stockfish/commit/";
-    var github_compare_link = "https://github.com/official-stockfish/Stockfish/compare/";
+    var github_commit_link = "https://github.com/niklasf/Stockfish/commit/";
+    var github_compare_link = "https://github.com/niklasf/Stockfish/compare/";
 
     $(element + " tbody").html("");
 
+    var elo_sum = 0;
+    var error_sum = 0;
     for (var i = 0; i < data.length; i++) {
+
+      elo_sum += parseFloat(data[i].elo);
+      error_sum = Math.sqrt(Math.pow(error_sum, 2) + Math.pow(data[i].error, 2));
 
       var commit_field = test_type == "fishtest" ? "commit" : "sha";
 
       var link = test_type != "fishtest" ? "" :
+         data[i].link.length <= 1 ? "<td></td>" :
         "<td><a target=\"_blank\" href=\"tests\/view\/" + data[i].link + "\">details</a></td>";
 
-      var date_committed = test_type == "fishtest" ? "" :
-        "<td>" + (new Date(data[i].date_committed)).toString() + "</td>";
+      var date_committed = "<td>" + (new Date(data[i].date_committed)).toDateString() + "</td>";
 
       var sha = "<td><a href=\"" +
         github_commit_link + data[i][commit_field] +
         "\" target=\"_blank\">" + data[i][commit_field].substring(0, 7) + "</a></td>"
 
-      var elo = "<td>" + (Math.round(data[i].elo * 100) / 100) + " ± " +
-        (Math.round(data[i].error * 100) / 100) + "</td>";
+      var elo = "<td>" + (Math.round(elo_sum * 100) / 100) + " ± " +
+        (Math.round(error_sum * 100) / 100) + "</td>";
 
       var change = i == 0 ? "<td></td>" :
         "<td style=\"background-color: " +
-        elo_change_color(data[i].elo - data[i - 1].elo) + "\">" +
-        (Math.round((data[i].elo - data[i - 1].elo) * 100) / 100) + " </td>";
+        elo_change_color(data[i].elo) + "\">" +
+        (Math.round((data[i].elo) * 100) / 100) + " ± " +
+        (Math.round(data[i].error * 100) / 100) + " </td>";
 
       var diff = i == 0 ? "<td></td>" :
         "<td><a class=\"btn btn-default\" href=\"" + github_compare_link +
@@ -257,17 +272,33 @@
             }
           })
 
-          draw_fishtest();
-          draw_jl_tests(0);
+          var variants = new Array();
 
-          if (!jl_data || jl_data.length < 1) return;
+          for (j = 0; j < fishtest_data.length; j++) {
+            if (variants.indexOf(fishtest_data[j].variant) == -1) {
+                variants.push(fishtest_data[j].variant);
+            }
+          }
+          if (variants.length == 0)
+            variants[0] = "chess";
+
+          draw_fishtest(variants[0]);
+          draw_jl_tests(0);
 
           for (j = 0; j < jl_data.length; j++) {
             $("#dropdown_jl_tests").append("<li><a test_id=\"" + j + "\" >" + jl_data[j].description + "</a></li>");
           }
 
+          for (j = 0; j < variants.length; j++) {
+            $("#dropdown_fishtest_tests").append("<li><a variant=\"" + variants[j] + "\" >" + variants[j] + "</a></li>");
+          }
+
           $("#dropdown_jl_tests").find('a').on('click', function() {
             draw_jl_tests($(this).attr('test_id'));
+          });
+
+          $("#dropdown_fishtest_tests").find('a').on('click', function() {
+            draw_fishtest($(this).attr('variant'));
           });
 
         })

@@ -26,7 +26,7 @@ import zipfile
 from optparse import OptionParser
 from zipfile import ZipFile
 
-FISHCOOKING_URL = 'https://github.com/mcostalba/FishCooking'
+FISHCOOKING_URL = 'https://github.com/ianfab/FishCooking'
 
 LINUX32 = {
   'system': 'linux',
@@ -146,8 +146,8 @@ def retry_build_ready(remote, payload, retries):
 
 def main():
   parser = OptionParser()
-  parser.add_option('-n', '--host', dest='host', default='tests.stockfishchess.org')
-  parser.add_option('-p', '--port', dest='port', default='80')
+  parser.add_option('-n', '--host', dest='host', default='35.161.250.236')
+  parser.add_option('-p', '--port', dest='port', default='6543')
   (options, args) = parser.parse_args()
 
   if len(args) != 2:

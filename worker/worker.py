@@ -14,7 +14,7 @@ from optparse import OptionParser
 from games import run_games
 from updater import update
 
-WORKER_VERSION = 59
+WORKER_VERSION = 61
 ALIVE = True
 
 HTTP_TIMEOUT = 5.0
@@ -25,8 +25,8 @@ def setup_config_file(config_file):
   config.read(config_file)
 
   defaults = [('login', 'username', ''), ('login', 'password', ''),
-              ('parameters', 'host', 'tests.stockfishchess.org'),
-              ('parameters', 'port', '80'),
+              ('parameters', 'host', '35.161.250.236'),
+              ('parameters', 'port', '6543'),
               ('parameters', 'concurrency', '3')]
 
   for v in defaults:
@@ -127,10 +127,6 @@ def main():
       sys.stderr.write('%s [username] [password]\n' % (sys.argv[0]))
       sys.exit(1)
 
-  # Re-route old IP
-  if '54.235.120.254' in options.host:
-    options.host = 'tests.stockfishchess.org'
-
   # Write command line parameters to the config file
   config.set('login', 'username', args[0])
   config.set('login', 'password', args[1])
@@ -166,7 +162,7 @@ def main():
   global ALIVE
   while ALIVE:
     if not success:
-      time.sleep(1800)
+      time.sleep(300)
     success = worker(worker_info, args[1], remote)
 
 if __name__ == '__main__':

@@ -34,14 +34,12 @@
           <li><a href="/actions">Actions</a></li>
           <li><a href="https://github.com/ddugovic/Stockfish/wiki" target="_blank">Wiki</a></li>
           <li class="nav-header">Links</li>
-          <li><a href="https://github.com/glinscott/fishtest" target="_blank">Github</a></li>
-          <li><a href="https://groups.google.com/forum/?fromgroups=#!forum/fishcooking" target="_blank">Forum</a></li>
-          <li><a href="https://groups.google.com/forum/?fromgroups=#!forum/fishcooking_results" target="_blank">History</a></li>
-          <li><a href="https://hxim.github.io/Stockfish-Evaluation-Guide/" target="_blank">EvalGuide</a></li>
+          <li><a href="https://github.com/ianfab/fishtest" target="_blank">Github</a></li>
+          <li><a href="https://github.com/ddugovic/Stockfish/issues" target="_blank">Issues</a></li>
           <li><a href="/regression">Regression</a></li>
-          <!--<li><a href="http://bit.ly/11QsIkd" target="_blank">Regression</a></li>-->
-          <li><a href="http://abrok.eu/stockfish/" target="_blank">Compiles</a></li>
-          <li><a href="https://github.com/official-stockfish/Stockfish" target="_blank">SF-github</a></li>
+          <li><a href="https://github.com/niklasf/Stockfish/releases" target="_blank">Compiles</a></li>
+          <li><a href="https://github.com/ddugovic/Stockfish" target="_blank">SF-github</a></li>
+          <li><a href="https://hxim.github.io/Stockfish-Evaluation-Guide/" target="_blank">EvalGuide</a></li>
           <li class="nav-header">Admin</li>
           <li><a href="/signup">Register</a></li>
         </ul>
