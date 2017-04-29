@@ -218,6 +218,9 @@ $(function() {
     if (stop_rule == 'spsa') $('.spsa').show();
   };
 
+  $('select[name=variant]').val("${args.get('variant', 'standard')}");
+  $('select[name=stop_rule]').val("${'sprt' if 'sprt' in args else 'spsa' if 'spsa' in args else 'numgames'}");
+
   update_visibility();
   $('select[name=stop_rule]').change(update_visibility);
 
