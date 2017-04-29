@@ -222,16 +222,12 @@ $(function() {
   $('select[name=stop_rule]').change(update_visibility);
 
   $('#fast_test').click(function() {
-    $('input[name=sprt_elo0]').val('0');
-    $('input[name=sprt_elo1]').val('10');
     $('input[name=tc]').val('10+0.1');
     $('input[name=new-options]').val('Hash=4 Move Overhead=100');
     $('input[name=base-options]').val('Hash=4 Move Overhead=100');
   });
 
   $('#slow_test').click(function() {
-    $('input[name=sprt_elo0]').val('0');
-    $('input[name=sprt_elo1]').val('10');
     $('input[name=tc]').val('30+0.3');
     $('input[name=new-options]').val('Hash=32 Move Overhead=100');
     $('input[name=base-options]').val('Hash=32 Move Overhead=100');
