@@ -1,3 +1,5 @@
+## Multi Variant Fishtest: server setup on Ubuntu
+
 Instructions to install a development multi variant fishtest server, tested working with Ubuntu from 15.10 to 17.04.
 
 1. Make a clean install of Ubuntu (virtual machine, cloud instance, lxd etc.)

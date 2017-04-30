@@ -1,11 +1,13 @@
+## Multi Variant Fishtest: worker setup on Windows
+
 ### Windows Subsystem for Linux
 If you are an experienced Linux user and you have a supported Windows platform, you can run the worker:
 * enabling [Windows Subsystem for Linux](https://msdn.microsoft.com/en-us/commandline/wsl/install_guide), and
-* simply following the [[Running the worker on Linux]].
+* simply following the [Multi Variant Fishtest worker setup on Linux](worker-setup-linux-md).
 
 Astonishingly Stockfish got a 3-4% speedup when running as Linux application in WSL respect to when running as Windows application.
 
-If you are not a Linux user, please don't try this at home, and use the following instructions.
+If you are not a Linux user, please don't try that at home, and use the following instructions.
 
 ### Get username/password for Multi Variant Fishtest
 
