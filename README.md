@@ -13,7 +13,7 @@ The fishtest worker:
 
 The fishtest server:
 - provides several test templates to generate tests for the patches.
-- manages the queue of the tests according customizable prorities.
+- manages the queue of the tests according customizable priorities.
 - computes several probabilistic values from the game results sent by the workers.
 - updates and publishes the results of ongoing tests.
 - stops tests according some bounds and publishes the final tests results.
