@@ -1,6 +1,6 @@
 ### Overview
 
-Multi Variant Fishtest, is a distributed tasks queue for testing new ideas and improvements for multi variant chess engine through self playing. The main instance for [Multi Variant Stockfish](https://github.com/ddugovic/Stockfish) is:
+Multi Variant Fishtest, is a distributed tasks queue to test new ideas and improvements for multi variant chess engine through self playing. The main instance for [Multi Variant Stockfish](https://github.com/ddugovic/Stockfish) is:
 
 http://35.161.250.236:6543/tests
 
