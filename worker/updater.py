@@ -37,5 +37,8 @@ def update():
   fishtest_dir = os.path.dirname(worker_dir) # fishtest_dir is assumed to be parent of worker_dir
   copy_tree(fishtest_src, fishtest_dir)
   shutil.rmtree(update_dir)
+  testing_dir = os.path.join(worker_dir, 'testing')
+  if os.path.exists(testing_dir):
+    shutil.rmtree(testing_dir)
 
   restart(worker_dir)
