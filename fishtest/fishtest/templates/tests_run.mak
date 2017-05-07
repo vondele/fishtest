@@ -22,7 +22,7 @@
     <div class="controls">
       <select name="variant">
         <option value="standard">Chess</option>
-        <option value="giveaway">Giveaway (not supported yet)</option>
+        <option value="giveaway">Giveaway</option>
         <option value="atomic">Atomic</option>
         <option value="crazyhouse">Crazyhouse</option>
         <option value="horde">Horde</option>
@@ -31,6 +31,7 @@
         <option value="racingkings">Racing Kings</option>
         <option value="3check">Three-check</option>
         <option value="loop">Loop</option>
+        <option value="suicide">Suicide</option>
       </select>
     </div>
   </div>
