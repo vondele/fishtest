@@ -18,9 +18,4 @@ The fishtest server:
 - updates and publishes the results of ongoing tests.
 - stops tests according some bounds and publishes the final tests results.
 
-#### Worker and Server setup
-
-Follow these instructions to setup:
-- a [Multi Variant Fishtest worker on Linux](worker-setup-linux.md)
-- a [Multi Variant Fishtest worker on Windows](worker-setup-windows.md)
-- a [Multi Variant Fishtest server on Ubuntu](server-setup.md)
+To get more information please visit the [Multi Variant Fishtest Wiki](https://github.com/ianfab/fishtest/wiki)
