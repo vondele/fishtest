@@ -166,6 +166,9 @@ Cowardice,150,0,200,10,0.0020"""})['raw_params']}</textarea>
     <label class="control-label">Book:</label>
     <div class="controls">
       <input name="book" value="${args.get('book', 'chess.epd')}">
+      <div class="btn-group">
+        <div class="btn" id="auto_book">auto</div>
+      </div>
     </div>
   </div>
   <div class="control-group">
@@ -249,6 +252,20 @@ $(function() {
   $('#simp_test').click(function() {
     $('input[name=sprt_elo0]').val('-10');
     $('input[name=sprt_elo1]').val('5');
+  });
+
+  $('#auto_book').click(function() {
+    var variant = $('select[name=variant]').val();
+    var bookname;
+    switch (variant) {
+        case "standard":
+            bookname = "chess.epd";
+            break;
+        default:
+            bookname = variant + ".epd";
+            break;
+    }
+    $('input[name=book]').val(bookname);
   });
 });
 </script>
