@@ -248,7 +248,7 @@ $(function() {
 
   $('#simp_test').click(function() {
     $('input[name=sprt_elo0]').val('-10');
-    $('input[name=sprt_elo0]').val('5');
+    $('input[name=sprt_elo1]').val('5');
   });
 });
 </script>
