@@ -95,6 +95,10 @@
     <label class="control-label">SPRT Elo0:</label>
     <div class="controls">
       <input name="sprt_elo0" value="${args.get('sprt', {'elo0': 0})['elo0']}">
+      <div class="btn-group">
+        <div class="btn" id="std_test">std</div>
+        <div class="btn" id="simp_test">simp</div>
+      </div>
     </div>
   </div>
   <div class="control-group stop_rule sprt">
@@ -235,6 +239,16 @@ $(function() {
     $('input[name=tc]').val('30+0.3');
     $('input[name=new-options]').val('Hash=32 Move Overhead=100');
     $('input[name=base-options]').val('Hash=32 Move Overhead=100');
+  });
+
+  $('#std_test').click(function() {
+    $('input[name=sprt_elo0]').val('0');
+    $('input[name=sprt_elo1]').val('10');
+  });
+
+  $('#simp_test').click(function() {
+    $('input[name=sprt_elo0]').val('-10');
+    $('input[name=sprt_elo0]').val('5');
   });
 });
 </script>
