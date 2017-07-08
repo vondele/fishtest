@@ -32,7 +32,8 @@
           <li><a href="/users">Users</a></li>
           <li><a href="/users/monthly">Top Month</a></li>
           <li><a href="/actions">Actions</a></li>
-          <li><a href="https://github.com/ddugovic/Stockfish/wiki" target="_blank">Wiki</a></li>
+          <li><a href="https://github.com/ddugovic/Stockfish/wiki" target="_blank">SF-Wiki</a></li>
+          <li><a href="https://github.com/ianfab/fishtest/wiki" target="_blank">Wiki</a></li>
           <li class="nav-header">Links</li>
           <li><a href="https://github.com/ianfab/fishtest" target="_blank">Github</a></li>
           <li><a href="https://github.com/ddugovic/Stockfish/issues" target="_blank">Issues</a></li>
