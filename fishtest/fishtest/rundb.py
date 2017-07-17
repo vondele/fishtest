@@ -164,6 +164,7 @@ class RunDb:
       # not currently is the color!
       q['results_info.style'] = '#44EB44'
 
+    self.runs.ensure_index([('last_updated', DESCENDING)])
     c = self.runs.find(q, skip=skip, limit=limit, sort=[('last_updated', DESCENDING)])
     result = [list(c), c.count()]
 
