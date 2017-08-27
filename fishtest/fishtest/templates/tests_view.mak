@@ -85,16 +85,16 @@ var spsa_history_url = '${run_args[0][1]}/spsa_history';
     <button type="submit" class="btn btn-primary">Modify</button>
   </form>
 
+  %if 'spsa' not in run['args']:
   <hr>
 
-  %if 'spsa' not in run['args']:
   <h4>Stats</h4>
   <table class="table table-condensed">
     <tr><td>chi^2</td><td>${'%.2f' % (chi2['chi2'])}</td></tr>
     <tr><td>dof</td><td>${chi2['dof']}</td></tr>
     <tr><td>p-value</td><td>${'%.2f' % (chi2['p'] * 100)}%</td></tr>
   </table>
-	%endif
+  %endif
 
   <hr>
 
