@@ -96,7 +96,13 @@ var spsa_history_url = '${run_args[0][1]}/spsa_history';
   </table>
 	%endif
 
-  
+  <hr>
+
+  <h4>Time</h4>
+  <table class="table table-condensed">
+    <tr><td>start time</td><td>${run['start_time'].strftime("%Y-%m-%d %H:%M:%S")}</td></tr>
+    <tr><td>last updated</td><td>${run['last_updated'].strftime("%Y-%m-%d %H:%M:%S")}</td></tr>
+  </table>
 </div>
 
 </div>
