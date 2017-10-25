@@ -809,7 +809,7 @@ def tests(request):
     r = run['results']
     expected_games = run['args']['num_games']
     if 'sprt' in run['args']:
-      expected_games = 16000
+      expected_games = 8000
     remaining_games = max(0, expected_games - r['wins'] - r['losses'] - r['draws'])
     game_secs = parse_tc(run['args']['tc'])
     return game_secs * remaining_games * int(run['args'].get('threads', 1)) / (60*60)
