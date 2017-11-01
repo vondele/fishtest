@@ -31,6 +31,7 @@
         <option value="losers">Losers</option>
         <option value="racingkings">Racing Kings</option>
         <option value="3check">Three-check</option>
+        <option value="twokings">Two kings</option>
         <option value="loop">Loop</option>
         <option value="suicide">Suicide</option>
       </select>
