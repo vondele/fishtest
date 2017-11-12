@@ -26,6 +26,7 @@
         <option value="atomic">Atomic</option>
         <option value="crazyhouse">Crazyhouse</option>
         <option value="extinction">Extinction</option>
+        <option value="grid">Grid</option>
         <option value="horde">Horde</option>
         <option value="kingofthehill">King of the Hill</option>
         <option value="losers">Losers</option>
