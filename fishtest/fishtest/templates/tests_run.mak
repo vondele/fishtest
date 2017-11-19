@@ -32,9 +32,12 @@
         <option value="losers">Losers</option>
         <option value="racingkings">Racing Kings</option>
         <option value="3check">Three-check</option>
-        <option value="twokings">Two kings</option>
+        <option value="twokings">Two Kings</option>
+        <option value="displacedgrid">Displaced Grid</option>
         <option value="loop">Loop</option>
+        <option value="slippedgrid">Slipped Grid</option>
         <option value="suicide">Suicide</option>
+        <option value="sortland9">Symmetric Two Kings</option> <!--renaming to twokingssymmetric required after cutechess update-->
       </select>
     </div>
   </div>
