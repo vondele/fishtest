@@ -37,7 +37,7 @@
         <option value="loop">Loop</option>
         <option value="slippedgrid">Slipped Grid</option>
         <option value="suicide">Suicide</option>
-        <option value="sortland9">Symmetric Two Kings</option> <!--renaming to twokingssymmetric required after cutechess update-->
+        <option value="twokingssymmetric">Symmetric Two Kings</option>
       </select>
     </div>
   </div>
