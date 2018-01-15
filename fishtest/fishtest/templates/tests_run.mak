@@ -4,7 +4,7 @@
 
 <form class="form-horizontal" action="${request.url}" method="POST">
   <legend>Create New Test</legend>
-  Please read the <a href="https://github.com/glinscott/fishtest/wiki/Creating-my-first-test">Testing Guidelines</a> before
+  Please read the <a href="https://github.com/ddugovic/Stockfish/wiki/Creating-my-first-test">Testing Guidelines</a> before
   creating your test.
 
   <br><br>
@@ -22,7 +22,7 @@
     <div class="controls">
       <select name="variant">
         <option value="standard">Chess</option>
-        <option value="giveaway">Giveaway</option>
+        <option value="giveaway">Giveaway (Antichess)</option>
         <option value="atomic">Atomic</option>
         <option value="crazyhouse">Crazyhouse</option>
         <option value="extinction">Extinction</option>
@@ -31,6 +31,8 @@
         <option value="kingofthehill">King of the Hill</option>
         <option value="losers">Losers</option>
         <option value="racingkings">Racing Kings</option>
+        <option value="seirawan">Seirawan (S-Chess)</option>
+        <option value="shatranj">Shatranj</option>
         <option value="3check">Three-check</option>
         <option value="twokings">Two Kings</option>
         <option value="displacedgrid">Displaced Grid</option>
