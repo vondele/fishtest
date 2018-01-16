@@ -35,12 +35,18 @@
           <li><a href="https://github.com/ddugovic/Stockfish/wiki" target="_blank">SF-Wiki</a></li>
           <li><a href="https://github.com/ianfab/fishtest/wiki" target="_blank">Wiki</a></li>
           <li class="nav-header">Links</li>
-          <li><a href="https://github.com/ianfab/fishtest" target="_blank">Github</a></li>
           <li><a href="https://github.com/ddugovic/Stockfish/issues" target="_blank">Issues</a></li>
           <li><a href="/regression">Regression</a></li>
           <li><a href="https://github.com/niklasf/Stockfish/releases" target="_blank">Compiles</a></li>
-          <li><a href="https://github.com/ddugovic/Stockfish" target="_blank">SF-github</a></li>
           <li><a href="https://hxim.github.io/Stockfish-Evaluation-Guide/" target="_blank">EvalGuide</a></li>
+          <li class="nav-header">Repositories</li>
+          <li><a href="https://github.com/ddugovic/Stockfish" target="_blank">MV-SF</a></li>
+          <li><a href="https://github.com/ianfab/Seirawan-Stockfish" target="_blank">Seirawan</a></li>
+          <li><a href="https://github.com/ianfab/Shatranj-Stockfish" target="_blank">Shatranj</a></li>
+          <li><a href="https://github.com/ianfab/fishtest" target="_blank">fishtest</a></li>
+          <li><a href="https://github.com/ianfab/bookgen" target="_blank">bookgen</a></li>
+          <li><a href="https://github.com/ianfab/books" target="_blank">books</a></li>
+          <li><a href="https://github.com/ianfab/fishutils" target="_blank">fishutils</a></li>
           <li class="nav-header">Admin</li>
           <li><a href="/signup">Register</a></li>
         </ul>
