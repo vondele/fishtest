@@ -253,6 +253,7 @@ def validate_form(request):
     'tc' : request.POST['tc'],
     'book' : request.POST['book'],
     'book_depth' : request.POST['book-depth'],
+    'auto_purge' : request.POST['auto_purge'] is not None,
     'base_signature' : request.POST['base-signature'],
     'new_signature' : request.POST['test-signature'],
     'base_options' : request.POST['base-options'],
@@ -671,7 +672,8 @@ def tests_view(request):
   for name in ['variant', 'new_tag', 'new_signature', 'new_options', 'resolved_new',
                'base_tag', 'base_signature', 'base_options', 'resolved_base',
                'sprt', 'num_games', 'spsa', 'tc', 'threads', 'book', 'book_depth',
-               'priority', 'internal_priority', 'username', 'tests_repo', 'info']:
+               'auto_purge', 'priority', 'internal_priority', 'username', 'tests_repo',
+               'info']:
 
     if not name in run['args']:
       continue
@@ -778,7 +780,7 @@ def tests(request):
     # when the run was finished, not when it is first viewed)
     if state == 'finished':
       purged = 0
-      if 'spsa' not in run['args'] and run['args']['threads'] == 1:
+      if run['args'].get('auto-purge') is not False and 'spsa' not in run['args'] and run['args']['threads'] == 1:
         while purge_run(request.rundb, run) and purged < 5:
           purged += 1
           run = request.rundb.get_run(run['_id'])
