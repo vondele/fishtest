@@ -261,6 +261,7 @@ $(function() {
   $('select[name=bounds]').val("${'custom' if re_run else 'std'}");
   update_visibility();
   $('select[name=stop_rule]').change(update_visibility);
+  $('select[name=bounds]').change(update_bounds);
 
   $('#fast_test').click(function() {
     $('input[name=tc]').val('10+0.1');
@@ -273,9 +274,6 @@ $(function() {
     $('input[name=new-options]').val('Hash=32 Move Overhead=100');
     $('input[name=base-options]').val('Hash=32 Move Overhead=100');
   });
-
-  update_bounds();
-  $('select[name=bounds]').change(update_bounds);
 
   $('#auto_book').click(function() {
     var variant = $('select[name=variant]').val();
