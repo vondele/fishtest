@@ -258,6 +258,7 @@ $(function() {
   $('select[name=variant]').val("${args.get('variant', 'standard')}");
   $('select[name=stop_rule]').val("${'sprt' if not re_run or 'sprt' in args else 'spsa' if 'spsa' in args else 'numgames'}");
 
+  $('select[name=bounds]').val("${'custom' if re_run else 'std'}");
   update_visibility();
   $('select[name=stop_rule]').change(update_visibility);
 
@@ -273,7 +274,6 @@ $(function() {
     $('input[name=base-options]').val('Hash=32 Move Overhead=100');
   });
 
-  $('select[name=bounds]').val("${'custom' if re_run else 'std'}");
   update_bounds();
   $('select[name=bounds]').change(update_bounds);
 
