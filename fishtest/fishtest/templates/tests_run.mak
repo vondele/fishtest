@@ -96,16 +96,22 @@
     </div>
   </div>
   <div class="control-group stop_rule sprt">
+    <label class="control-label">SPRT bounds:</label>
+    <div class="controls">
+      <select name="bounds">
+        <option value="std">Standard [0,10]</option>
+        <option value="simpl">Simplification [-10,5]</option>
+        <option value="custom">Custom...</option>
+      </select>
+    </div>
+  </div>
+  <div class="control-group stop_rule sprt custom_bounds">
     <label class="control-label">SPRT Elo0:</label>
     <div class="controls">
       <input name="sprt_elo0" value="${args.get('sprt', {'elo0': 0})['elo0']}">
-      <div class="btn-group">
-        <div class="btn" id="std_test">std</div>
-        <div class="btn" id="simp_test">simp</div>
-      </div>
     </div>
   </div>
-  <div class="control-group stop_rule sprt">
+  <div class="control-group stop_rule sprt custom_bounds">
     <label class="control-label">SPRT Elo1:</label>
     <div class="controls">
       <input name="sprt_elo1" value="${args.get('sprt', {'elo1': 10})['elo1']}">
@@ -232,11 +238,20 @@ Cowardice,150,0,200,10,0.0020"""})['raw_params']}</textarea>
 
 <script type="text/javascript">
 $(function() {
+  var update_bounds = function() {
+    var bounds = $('select[name=bounds]').val();
+    if (bounds == 'std') { $('input[name=sprt_elo0]').val('0'); $('input[name=sprt_elo1]').val('10'); }
+    if (bounds == 'simpl') { $('input[name=sprt_elo0]').val('-10'); $('input[name=sprt_elo1]').val('5'); }
+    if (bounds == 'custom')
+      $('.custom_bounds').show();
+    else
+      $('.custom_bounds').hide();
+  };
   var update_visibility = function() {
     $('.stop_rule').hide();
     var stop_rule = $('select[name=stop_rule]').val();
     if (stop_rule == 'numgames') $('.numgames').show();
-    if (stop_rule == 'sprt') $('.sprt').show();
+    if (stop_rule == 'sprt') { $('.sprt').show(); update_bounds(); }
     if (stop_rule == 'spsa') $('.spsa').show();
   };
 
@@ -258,15 +273,9 @@ $(function() {
     $('input[name=base-options]').val('Hash=32 Move Overhead=100');
   });
 
-  $('#std_test').click(function() {
-    $('input[name=sprt_elo0]').val('0');
-    $('input[name=sprt_elo1]').val('10');
-  });
-
-  $('#simp_test').click(function() {
-    $('input[name=sprt_elo0]').val('-10');
-    $('input[name=sprt_elo1]').val('5');
-  });
+  $('select[name=bounds]').val("${'custom' if re_run else 'std'}");
+  update_bounds();
+  $('select[name=bounds]').change(update_bounds);
 
   $('#auto_book').click(function() {
     var variant = $('select[name=variant]').val();
