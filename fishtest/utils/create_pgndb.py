@@ -2,10 +2,10 @@
 
 from pymongo import MongoClient, ASCENDING, DESCENDING
 
-conn = MongoClient('localhost')
+conn = MongoClient("localhost")
 
-db = conn['fishtest_new']
+db = conn["fishtest_new"]
 
-db.drop_collection('pgns')
+db.drop_collection("pgns")
 
-db.create_collection('pgns', capped=True, size=50000)
+db.create_collection("pgns", capped=True, size=50000)

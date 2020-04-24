@@ -15,25 +15,27 @@ import sys
 import pprint
 from pymongo import MongoClient, ASCENDING, DESCENDING
 
-db_name='fishtest_new'
+db_name = "fishtest_new"
 
 # MongoDB server is assumed to be on the same machine, if not user should use
 # ssh with port forwarding to access the remote host.
-conn = MongoClient(os.getenv('FISHTEST_HOST') or 'localhost')
+conn = MongoClient(os.getenv("FISHTEST_HOST") or "localhost")
 db = conn[db_name]
-runs = db['runs']
-pgns = db['pgns']
+runs = db["runs"]
+pgns = db["pgns"]
+
 
 def printout(s):
-  print(s)
-  sys.stdout.flush()
+    print(s)
+    sys.stdout.flush()
+
 
 # create indexes:
-#printout("Creating index ...")
-#runs.create_index([('tasks.pending', ASCENDING)])
+# printout("Creating index ...")
+# runs.create_index([('tasks.pending', ASCENDING)])
 
 printout("Creating pgn index ...")
-pgns.ensure_index([('run_id', ASCENDING)])
+pgns.ensure_index([("run_id", ASCENDING)])
 
 # IF INDEX NEEDS TO BE DROPPED, COMMENT OUT ABOVE 2 LINES, AND UNCOMMENT NEXT 2:
 # printout("\nDropping index ...")
