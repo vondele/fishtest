@@ -960,7 +960,7 @@ def worker():
                 break
             else:
                 print("Waiting {} seconds before retrying".format(delay))
-                safe_sleep(delay)
+                # safe_sleep(delay)
                 delay = min(MAX_RETRY_TIME, delay * 2)
         else:
             delay = HTTP_TIMEOUT
