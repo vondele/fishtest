@@ -7,6 +7,7 @@ import re
 import threading
 import time
 import urllib
+from functools import wraps
 
 import fishtest.stats.stat_util
 import requests

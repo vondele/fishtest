@@ -1,6 +1,7 @@
 import base64
 import copy
 from datetime import datetime, timedelta, timezone
+from functools import wraps
 
 import requests
 from fishtest.stats.stat_util import SPRT_elo
