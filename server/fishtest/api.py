@@ -31,6 +31,17 @@ WORKER_VERSION = 199
 
 flag_cache = {}
 
+def timeit(func):
+    @wraps(func)
+    def timeit_wrapper(*args, **kwargs):
+        start_time = time.perf_counter()
+        result = func(*args, **kwargs)
+        end_time = time.perf_counter()
+        total_time = end_time - start_time
+        print(f'Function {func.__name__}{args} {kwargs} Took {total_time:.4f} seconds')
+        return result
+    return timeit_wrapper
+
 
 def validate_request(request):
     schema = {
@@ -305,6 +316,7 @@ class ApiView(object):
         return flag_cache[ip].get("cc")
 
     @view_config(route_name="api_active_runs")
+    @timeit
     def active_runs(self):
         active = {}
         for run in self.request.rundb.get_unfinished_runs():
@@ -312,6 +324,7 @@ class ApiView(object):
         return active
 
     @view_config(route_name="api_actions")
+    @timeit
     def actions(self):
         try:
             query = self.request.json_body
@@ -327,6 +340,7 @@ class ApiView(object):
         return ret
 
     @view_config(route_name="api_get_run")
+    @timeit
     def get_run(self):
         run = self.request.rundb.get_run(self.request.matchdict["id"])
         if run is None:
@@ -334,6 +348,7 @@ class ApiView(object):
         return strip_run(run)
 
     @view_config(route_name="api_get_task")
+    @timeit
     def get_task(self):
         try:
             run = self.request.rundb.get_run(self.request.matchdict["id"])
@@ -365,6 +380,7 @@ class ApiView(object):
         return task
 
     @view_config(route_name="api_get_elo")
+    @timeit
     def get_elo(self):
         run = self.request.rundb.get_run(self.request.matchdict["id"])
         if run is None:
@@ -388,6 +404,7 @@ class ApiView(object):
         return run
 
     @view_config(route_name="api_request_task")
+    @timeit
     def request_task(self):
         self.validate_request("/api/request_task")
         worker_info = self.worker_info()
@@ -416,6 +433,7 @@ class ApiView(object):
         return self.add_time(result)
 
     @view_config(route_name="api_update_task")
+    @timeit
     def update_task(self):
         self.validate_request("/api/update_task")
         result = self.request.rundb.update_task(
@@ -428,6 +446,7 @@ class ApiView(object):
         return self.add_time(result)
 
     @view_config(route_name="api_failed_task")
+    @timeit
     def failed_task(self):
         self.validate_request("/api/failed_task")
         result = self.request.rundb.failed_task(
@@ -436,6 +455,7 @@ class ApiView(object):
         return self.add_time(result)
 
     @view_config(route_name="api_upload_pgn")
+    @timeit
     def upload_pgn(self):
         self.validate_request("/api/upload_pgn")
         result = self.request.rundb.upload_pgn(
@@ -445,6 +465,7 @@ class ApiView(object):
         return self.add_time(result)
 
     @view_config(route_name="api_download_pgn", renderer="string")
+    @timeit
     def download_pgn(self):
         pgn = self.request.rundb.get_pgn(self.request.matchdict["id"])
         if pgn is None:
@@ -454,6 +475,7 @@ class ApiView(object):
         return pgn
 
     @view_config(route_name="api_download_pgn_100")
+    @timeit
     def download_pgn_100(self):
         skip = int(self.request.matchdict["skip"])
         urls = self.request.rundb.get_pgn_100(skip)
@@ -462,6 +484,7 @@ class ApiView(object):
         return urls
 
     @view_config(route_name="api_download_nn")
+    @timeit
     def download_nn(self):
         nn = self.request.rundb.get_nn(self.request.matchdict["id"])
         if nn is None:
@@ -474,6 +497,7 @@ class ApiView(object):
         )
 
     @view_config(route_name="api_stop_run")
+    @timeit
     def stop_run(self):
         api = "/api/stop_run"
         self.validate_request(api)
@@ -506,6 +530,7 @@ class ApiView(object):
         return self.add_time({})
 
     @view_config(route_name="api_request_version")
+    @timeit
     def request_version(self):
         # By being mor lax here we can be more strict
         # elsewhere since the worker will upgrade.
@@ -513,6 +538,7 @@ class ApiView(object):
         return self.add_time({"version": WORKER_VERSION})
 
     @view_config(route_name="api_beat")
+    @timeit
     def beat(self):
         self.validate_request("/api/beat")
         run = self.run()
@@ -522,6 +548,7 @@ class ApiView(object):
         return self.add_time({})
 
     @view_config(route_name="api_request_spsa")
+    @timeit
     def request_spsa(self):
         self.validate_request("/api/request_spsa")
         result = self.request.rundb.request_spsa(self.run_id(), self.task_id())

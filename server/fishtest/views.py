@@ -29,6 +29,16 @@ from requests.exceptions import ConnectionError, HTTPError
 
 HTTP_TIMEOUT = 15.0
 
+def timeit(func):
+    @wraps(func)
+    def timeit_wrapper(*args, **kwargs):
+        start_time = time.perf_counter()
+        result = func(*args, **kwargs)
+        end_time = time.perf_counter()
+        total_time = end_time - start_time
+        print(f'Function {func.__name__}{args} {kwargs} Took {total_time:.4f} seconds')
+        return result
+    return timeit_wrapper
 
 def clear_cache():
     global last_time, last_tests
@@ -81,6 +91,7 @@ def pagination(page_idx, num, page_size):
 
 
 @view_config(route_name="home")
+@timeit
 def home(request):
     return HTTPFound(location=request.route_url("tests"))
 
@@ -92,6 +103,7 @@ def home(request):
     request_method=("GET", "POST"),
 )
 @forbidden_view_config(renderer="login.mak")
+@timeit
 def login(request):
     userid = request.authenticated_userid
     if userid:
@@ -128,6 +140,7 @@ def login(request):
 
 
 @view_config(route_name="nn_upload", renderer="nn_upload.mak", require_csrf=True)
+@timeit
 def upload(request):
     userid = request.authenticated_userid
     if not userid:
@@ -213,6 +226,7 @@ def upload(request):
 
 
 @view_config(route_name="logout", require_csrf=True, request_method="POST")
+@timeit
 def logout(request):
     session = request.session
     headers = forget(request)
@@ -226,6 +240,7 @@ def logout(request):
     require_csrf=True,
     request_method=("GET", "POST"),
 )
+@timeit
 def signup(request):
     userid = request.authenticated_userid
     if userid:
@@ -295,6 +310,7 @@ def signup(request):
 
 
 @view_config(route_name="nns", renderer="nns.mak")
+@timeit
 def nns(request):
     user_id = request.authenticated_userid
     user = request.params.get("user", "")
@@ -331,6 +347,7 @@ def nns(request):
 
 
 @view_config(route_name="sprt_calc", renderer="sprt_calc.mak")
+@timeit
 def sprt_calc(request):
     return {}
 
@@ -364,6 +381,7 @@ def sanitize_quotation_marks(text):
 
 
 @view_config(route_name="actions", renderer="actions.mak")
+@timeit
 def actions(request):
     search_action = request.params.get("action", "")
     username = request.params.get("user", "")
@@ -429,6 +447,7 @@ def get_idle_users(request):
 
 
 @view_config(route_name="pending", renderer="pending.mak")
+@timeit
 def pending(request):
     if not request.has_permission("approve_run"):
         request.session.flash("You cannot view pending users", "error")
@@ -439,6 +458,7 @@ def pending(request):
 
 @view_config(route_name="user", renderer="user.mak")
 @view_config(route_name="profile", renderer="user.mak")
+@timeit
 def user(request):
     userid = request.authenticated_userid
     if not userid:
@@ -515,6 +535,7 @@ def user(request):
 
 
 @view_config(route_name="users", renderer="users.mak")
+@timeit
 def users(request):
     users_list = list(request.userdb.user_cache.find())
     users_list.sort(key=lambda k: k["cpu_hours"], reverse=True)
@@ -522,6 +543,7 @@ def users(request):
 
 
 @view_config(route_name="users_monthly", renderer="users.mak")
+@timeit
 def users_monthly(request):
     users_list = list(request.userdb.top_month.find())
     users_list.sort(key=lambda k: k["cpu_hours"], reverse=True)
@@ -894,6 +916,7 @@ def new_run_message(request, run):
 
 
 @view_config(route_name="tests_run", renderer="tests_run.mak", require_csrf=True)
+@timeit
 def tests_run(request):
     if not request.authenticated_userid:
         request.session.flash("Please login")
@@ -948,6 +971,7 @@ def can_modify_run(request, run):
 
 
 @view_config(route_name="tests_modify", require_csrf=True, request_method="POST")
+@timeit
 def tests_modify(request):
     if not request.authenticated_userid:
         request.session.flash("Please login")
@@ -1027,6 +1051,7 @@ def tests_modify(request):
 
 
 @view_config(route_name="tests_stop", require_csrf=True, request_method="POST")
+@timeit
 def tests_stop(request):
     if not request.authenticated_userid:
         request.session.flash("Please login")
@@ -1049,6 +1074,7 @@ def tests_stop(request):
 
 
 @view_config(route_name="tests_approve", require_csrf=True, request_method="POST")
+@timeit
 def tests_approve(request):
     if not request.authenticated_userid:
         request.session.flash("Please login")
@@ -1072,6 +1098,7 @@ def tests_approve(request):
 
 
 @view_config(route_name="tests_purge", require_csrf=True, request_method="POST")
+@timeit
 def tests_purge(request):
     if not request.has_permission("approve_run"):
         request.session.flash("Please login as approver")
@@ -1100,6 +1127,7 @@ def tests_purge(request):
 
 
 @view_config(route_name="tests_delete", require_csrf=True, request_method="POST")
+@timeit
 def tests_delete(request):
     if not request.authenticated_userid:
         request.session.flash("Please login")
@@ -1140,6 +1168,7 @@ def get_page_title(run):
 
 
 @view_config(route_name="tests_live_elo", renderer="tests_live_elo.mak")
+@timeit
 def tests_live_elo(request):
     run = request.rundb.get_run(request.matchdict["id"])
     request.rundb.get_results(run)
@@ -1147,6 +1176,7 @@ def tests_live_elo(request):
 
 
 @view_config(route_name="tests_stats", renderer="tests_stats.mak")
+@timeit
 def tests_stats(request):
     run = request.rundb.get_run(request.matchdict["id"])
     request.rundb.get_results(run)
@@ -1154,6 +1184,7 @@ def tests_stats(request):
 
 
 @view_config(route_name="tests_view", renderer="tests_view.mak")
+@timeit
 def tests_view(request):
     run = request.rundb.get_run(request.matchdict["id"])
     if "follow" in request.params:
@@ -1355,11 +1386,13 @@ def get_paginated_finished_runs(request):
 
 
 @view_config(route_name="tests_finished", renderer="tests_finished.mak")
+@timeit
 def tests_finished(request):
     return get_paginated_finished_runs(request)
 
 
 @view_config(route_name="tests_user", renderer="tests_user.mak")
+@timeit
 def tests_user(request):
     request.response.headerlist.extend(
         (
@@ -1414,6 +1447,7 @@ building = threading.Semaphore()
 
 
 @view_config(route_name="tests", renderer="tests.mak")
+@timeit
 def tests(request):
     request.response.headerlist.extend(
         (
