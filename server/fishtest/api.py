@@ -14,6 +14,7 @@ from pyramid.httpexceptions import (
 )
 from pyramid.response import Response
 from pyramid.view import exception_view_config, view_config, view_defaults
+from fishtest.dev_util import log_timer
 
 """
 Important note
@@ -304,14 +305,14 @@ class ApiView(object):
                 flag_cache[ip]["cc"] = get_flag_cc(self, ip)
         return flag_cache[ip].get("cc")
 
-    @view_config(route_name="api_active_runs")
+    @view_config(route_name="api_active_runs", decorator=log_timer)
     def active_runs(self):
         active = {}
         for run in self.request.rundb.get_unfinished_runs():
             active[str(run["_id"])] = strip_run(run)
         return active
 
-    @view_config(route_name="api_actions")
+    @view_config(route_name="api_actions", decorator=log_timer)
     def actions(self):
         try:
             query = self.request.json_body
@@ -326,14 +327,14 @@ class ApiView(object):
         self.request.response.headers["access-control-allow-headers"] = "content-type"
         return ret
 
-    @view_config(route_name="api_get_run")
+    @view_config(route_name="api_get_run", decorator=log_timer)
     def get_run(self):
         run = self.request.rundb.get_run(self.request.matchdict["id"])
         if run is None:
             raise exception_response(404)
         return strip_run(run)
 
-    @view_config(route_name="api_get_task")
+    @view_config(route_name="api_get_task", decorator=log_timer)
     def get_task(self):
         try:
             run = self.request.rundb.get_run(self.request.matchdict["id"])
@@ -364,7 +365,7 @@ class ApiView(object):
                 task["residual"] = "inf"
         return task
 
-    @view_config(route_name="api_get_elo")
+    @view_config(route_name="api_get_elo", decorator=log_timer)
     def get_elo(self):
         run = self.request.rundb.get_run(self.request.matchdict["id"])
         if run is None:
@@ -387,7 +388,7 @@ class ApiView(object):
         run["args"]["sprt"] = sprt
         return run
 
-    @view_config(route_name="api_request_task")
+    @view_config(route_name="api_request_task", decorator=log_timer)
     def request_task(self):
         self.validate_request("/api/request_task")
         worker_info = self.worker_info()
@@ -415,7 +416,7 @@ class ApiView(object):
         result["run"] = min_run
         return self.add_time(result)
 
-    @view_config(route_name="api_update_task")
+    @view_config(route_name="api_update_task", decorator=log_timer)
     def update_task(self):
         self.validate_request("/api/update_task")
         result = self.request.rundb.update_task(
@@ -427,7 +428,7 @@ class ApiView(object):
         )
         return self.add_time(result)
 
-    @view_config(route_name="api_failed_task")
+    @view_config(route_name="api_failed_task", decorator=log_timer)
     def failed_task(self):
         self.validate_request("/api/failed_task")
         result = self.request.rundb.failed_task(
@@ -435,7 +436,7 @@ class ApiView(object):
         )
         return self.add_time(result)
 
-    @view_config(route_name="api_upload_pgn")
+    @view_config(route_name="api_upload_pgn", decorator=log_timer)
     def upload_pgn(self):
         self.validate_request("/api/upload_pgn")
         result = self.request.rundb.upload_pgn(
@@ -444,7 +445,7 @@ class ApiView(object):
         )
         return self.add_time(result)
 
-    @view_config(route_name="api_download_pgn", renderer="string")
+    @view_config(route_name="api_download_pgn", renderer="string", decorator=log_timer)
     def download_pgn(self):
         pgn = self.request.rundb.get_pgn(self.request.matchdict["id"])
         if pgn is None:
@@ -453,7 +454,7 @@ class ApiView(object):
             self.request.response.content_type = "application/x-chess-pgn"
         return pgn
 
-    @view_config(route_name="api_download_pgn_100")
+    @view_config(route_name="api_download_pgn_100", decorator=log_timer)
     def download_pgn_100(self):
         skip = int(self.request.matchdict["skip"])
         urls = self.request.rundb.get_pgn_100(skip)
@@ -461,7 +462,7 @@ class ApiView(object):
             raise exception_response(404)
         return urls
 
-    @view_config(route_name="api_download_nn")
+    @view_config(route_name="api_download_nn", decorator=log_timer)
     def download_nn(self):
         nn = self.request.rundb.get_nn(self.request.matchdict["id"])
         if nn is None:
@@ -473,7 +474,7 @@ class ApiView(object):
             "https://data.stockfishchess.org/nn/" + self.request.matchdict["id"]
         )
 
-    @view_config(route_name="api_stop_run")
+    @view_config(route_name="api_stop_run", decorator=log_timer)
     def stop_run(self):
         api = "/api/stop_run"
         self.validate_request(api)
@@ -505,14 +506,14 @@ class ApiView(object):
         self.handle_error(error, exception=HTTPUnauthorized)
         return self.add_time({})
 
-    @view_config(route_name="api_request_version")
+    @view_config(route_name="api_request_version", decorator=log_timer)
     def request_version(self):
         # By being mor lax here we can be more strict
         # elsewhere since the worker will upgrade.
         self.validate_username_password("/api/request_version")
         return self.add_time({"version": WORKER_VERSION})
 
-    @view_config(route_name="api_beat")
+    @view_config(route_name="api_beat", decorator=log_timer)
     def beat(self):
         self.validate_request("/api/beat")
         run = self.run()
@@ -521,7 +522,7 @@ class ApiView(object):
         self.request.rundb.buffer(run, False)
         return self.add_time({})
 
-    @view_config(route_name="api_request_spsa")
+    @view_config(route_name="api_request_spsa", decorator=log_timer)
     def request_spsa(self):
         self.validate_request("/api/request_spsa")
         result = self.request.rundb.request_spsa(self.run_id(), self.task_id())

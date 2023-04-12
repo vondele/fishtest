@@ -26,6 +26,7 @@ from pyramid.httpexceptions import HTTPFound, exception_response
 from pyramid.security import forget, remember
 from pyramid.view import forbidden_view_config, view_config
 from requests.exceptions import ConnectionError, HTTPError
+from fishtest.dev_util import log_timer
 
 HTTP_TIMEOUT = 15.0
 
@@ -80,7 +81,7 @@ def pagination(page_idx, num, page_size):
     return pages
 
 
-@view_config(route_name="home")
+@view_config(route_name="home", decorator=log_timer)
 def home(request):
     return HTTPFound(location=request.route_url("tests"))
 
@@ -90,8 +91,9 @@ def home(request):
     renderer="login.mak",
     require_csrf=True,
     request_method=("GET", "POST"),
+    decorator=log_timer,
 )
-@forbidden_view_config(renderer="login.mak")
+@forbidden_view_config(renderer="login.mak", decorator=log_timer)
 def login(request):
     userid = request.authenticated_userid
     if userid:
@@ -127,7 +129,12 @@ def login(request):
     return {}
 
 
-@view_config(route_name="nn_upload", renderer="nn_upload.mak", require_csrf=True)
+@view_config(
+    route_name="nn_upload",
+    renderer="nn_upload.mak",
+    require_csrf=True,
+    decorator=log_timer,
+)
 def upload(request):
     userid = request.authenticated_userid
     if not userid:
@@ -212,7 +219,9 @@ def upload(request):
     return HTTPFound(location=request.route_url("nns"))
 
 
-@view_config(route_name="logout", require_csrf=True, request_method="POST")
+@view_config(
+    route_name="logout", require_csrf=True, request_method="POST", decorator=log_timer
+)
 def logout(request):
     session = request.session
     headers = forget(request)
@@ -225,6 +234,7 @@ def logout(request):
     renderer="signup.mak",
     require_csrf=True,
     request_method=("GET", "POST"),
+    decorator=log_timer,
 )
 def signup(request):
     userid = request.authenticated_userid
@@ -294,7 +304,7 @@ def signup(request):
     return {}
 
 
-@view_config(route_name="nns", renderer="nns.mak")
+@view_config(route_name="nns", renderer="nns.mak", decorator=log_timer)
 def nns(request):
     user_id = request.authenticated_userid
     user = request.params.get("user", "")
@@ -330,7 +340,7 @@ def nns(request):
     }
 
 
-@view_config(route_name="sprt_calc", renderer="sprt_calc.mak")
+@view_config(route_name="sprt_calc", renderer="sprt_calc.mak", decorator=log_timer)
 def sprt_calc(request):
     return {}
 
@@ -363,7 +373,7 @@ def sanitize_quotation_marks(text):
     return text.translate(quotation_marks_translation)
 
 
-@view_config(route_name="actions", renderer="actions.mak")
+@view_config(route_name="actions", renderer="actions.mak", decorator=log_timer)
 def actions(request):
     search_action = request.params.get("action", "")
     username = request.params.get("user", "")
@@ -428,7 +438,7 @@ def get_idle_users(request):
     return idle
 
 
-@view_config(route_name="pending", renderer="pending.mak")
+@view_config(route_name="pending", renderer="pending.mak", decorator=log_timer)
 def pending(request):
     if not request.has_permission("approve_run"):
         request.session.flash("You cannot view pending users", "error")
@@ -437,8 +447,8 @@ def pending(request):
     return {"users": request.userdb.get_pending(), "idle": get_idle_users(request)}
 
 
-@view_config(route_name="user", renderer="user.mak")
-@view_config(route_name="profile", renderer="user.mak")
+@view_config(route_name="user", renderer="user.mak", decorator=log_timer)
+@view_config(route_name="profile", renderer="user.mak", decorator=log_timer)
 def user(request):
     userid = request.authenticated_userid
     if not userid:
@@ -514,14 +524,14 @@ def user(request):
     }
 
 
-@view_config(route_name="users", renderer="users.mak")
+@view_config(route_name="users", renderer="users.mak", decorator=log_timer)
 def users(request):
     users_list = list(request.userdb.user_cache.find())
     users_list.sort(key=lambda k: k["cpu_hours"], reverse=True)
     return {"users": users_list}
 
 
-@view_config(route_name="users_monthly", renderer="users.mak")
+@view_config(route_name="users_monthly", renderer="users.mak", decorator=log_timer)
 def users_monthly(request):
     users_list = list(request.userdb.top_month.find())
     users_list.sort(key=lambda k: k["cpu_hours"], reverse=True)
@@ -893,7 +903,12 @@ def new_run_message(request, run):
     return ret
 
 
-@view_config(route_name="tests_run", renderer="tests_run.mak", require_csrf=True)
+@view_config(
+    route_name="tests_run",
+    renderer="tests_run.mak",
+    require_csrf=True,
+    decorator=log_timer,
+)
 def tests_run(request):
     if not request.authenticated_userid:
         request.session.flash("Please login")
@@ -947,7 +962,12 @@ def can_modify_run(request, run):
     ] == request.authenticated_userid or request.has_permission("approve_run")
 
 
-@view_config(route_name="tests_modify", require_csrf=True, request_method="POST")
+@view_config(
+    route_name="tests_modify",
+    require_csrf=True,
+    request_method="POST",
+    decorator=log_timer,
+)
 def tests_modify(request):
     if not request.authenticated_userid:
         request.session.flash("Please login")
@@ -1026,7 +1046,12 @@ def tests_modify(request):
     return HTTPFound(location=request.route_url("tests"))
 
 
-@view_config(route_name="tests_stop", require_csrf=True, request_method="POST")
+@view_config(
+    route_name="tests_stop",
+    require_csrf=True,
+    request_method="POST",
+    decorator=log_timer,
+)
 def tests_stop(request):
     if not request.authenticated_userid:
         request.session.flash("Please login")
@@ -1048,7 +1073,12 @@ def tests_stop(request):
     return HTTPFound(location=request.route_url("tests"))
 
 
-@view_config(route_name="tests_approve", require_csrf=True, request_method="POST")
+@view_config(
+    route_name="tests_approve",
+    require_csrf=True,
+    request_method="POST",
+    decorator=log_timer,
+)
 def tests_approve(request):
     if not request.authenticated_userid:
         request.session.flash("Please login")
@@ -1071,7 +1101,12 @@ def tests_approve(request):
     return HTTPFound(location=request.route_url("tests"))
 
 
-@view_config(route_name="tests_purge", require_csrf=True, request_method="POST")
+@view_config(
+    route_name="tests_purge",
+    require_csrf=True,
+    request_method="POST",
+    decorator=log_timer,
+)
 def tests_purge(request):
     if not request.has_permission("approve_run"):
         request.session.flash("Please login as approver")
@@ -1099,7 +1134,12 @@ def tests_purge(request):
     return HTTPFound(location=request.route_url("tests"))
 
 
-@view_config(route_name="tests_delete", require_csrf=True, request_method="POST")
+@view_config(
+    route_name="tests_delete",
+    require_csrf=True,
+    request_method="POST",
+    decorator=log_timer,
+)
 def tests_delete(request):
     if not request.authenticated_userid:
         request.session.flash("Please login")
@@ -1139,21 +1179,23 @@ def get_page_title(run):
     return page_title
 
 
-@view_config(route_name="tests_live_elo", renderer="tests_live_elo.mak")
+@view_config(
+    route_name="tests_live_elo", renderer="tests_live_elo.mak", decorator=log_timer
+)
 def tests_live_elo(request):
     run = request.rundb.get_run(request.matchdict["id"])
     request.rundb.get_results(run)
     return {"run": run, "page_title": get_page_title(run)}
 
 
-@view_config(route_name="tests_stats", renderer="tests_stats.mak")
+@view_config(route_name="tests_stats", renderer="tests_stats.mak", decorator=log_timer)
 def tests_stats(request):
     run = request.rundb.get_run(request.matchdict["id"])
     request.rundb.get_results(run)
     return {"run": run, "page_title": get_page_title(run)}
 
 
-@view_config(route_name="tests_view", renderer="tests_view.mak")
+@view_config(route_name="tests_view", renderer="tests_view.mak", decorator=log_timer)
 def tests_view(request):
     run = request.rundb.get_run(request.matchdict["id"])
     if "follow" in request.params:
@@ -1232,8 +1274,8 @@ def tests_view(request):
             params = value["params"]
             value = [summary]
             for p in params:
-                c_iter = p["c"] / (iter_local**gamma)
-                r_iter = p["a"] / (A + iter_local) ** alpha / c_iter**2
+                c_iter = p["c"] / (iter_local ** gamma)
+                r_iter = p["a"] / (A + iter_local) ** alpha / c_iter ** 2
                 value.append(
                     [
                         p["name"],
@@ -1354,12 +1396,14 @@ def get_paginated_finished_runs(request):
     }
 
 
-@view_config(route_name="tests_finished", renderer="tests_finished.mak")
+@view_config(
+    route_name="tests_finished", renderer="tests_finished.mak", decorator=log_timer
+)
 def tests_finished(request):
     return get_paginated_finished_runs(request)
 
 
-@view_config(route_name="tests_user", renderer="tests_user.mak")
+@view_config(route_name="tests_user", renderer="tests_user.mak", decorator=log_timer)
 def tests_user(request):
     request.response.headerlist.extend(
         (
@@ -1413,7 +1457,7 @@ last_time = 0
 building = threading.Semaphore()
 
 
-@view_config(route_name="tests", renderer="tests.mak")
+@view_config(route_name="tests", renderer="tests.mak", decorator=log_timer)
 def tests(request):
     request.response.headerlist.extend(
         (
