@@ -5,6 +5,6 @@ def log_timer(wrapped):
         start = time.time()
         response = wrapped(context, request)
         duration = time.time() - start
-        print('view %s took %.6f seconds' %(wrapped.__name__, duration))
+        print('route %s took %.6f seconds' %(request.matched_route.name, duration))
         return response
     return wrapper
