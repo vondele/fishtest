@@ -18,3 +18,4 @@ The fishtest server:
 - knows how to stop tests when they are statistically significant and publishes the final tests results.
 
 To get more information, such as the worker/server install and configuration instructions, visit the [Fishtest Wiki](https://github.com/official-stockfish/fishtest/wiki).
+
