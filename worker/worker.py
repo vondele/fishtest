@@ -19,12 +19,14 @@ import time
 import traceback
 import uuid
 import zlib
+import tempfile
 from argparse import ArgumentDefaultsHelpFormatter, ArgumentParser
 from configparser import ConfigParser
 from contextlib import ExitStack
 from datetime import datetime, timezone
 from functools import partial
 from pathlib import Path
+from games import github_api, requests_get
 
 # Fall back to the provided packages if missing in the local system.
 
@@ -398,7 +400,7 @@ def verify_required_cutechess(testing_dir, cutechess):
             close_fds=not IS_WINDOWS,
         ) as p:
             errors = p.stderr.read()
-            pattern = re.compile("cutechess-cli ([0-9]*).([0-9]*).([0-9]*)")
+            pattern = re.compile("fast-chess alpha-([0-9]*).([0-9]*).([0-9]*)")
             major, minor, patch = 0, 0, 0
             for line in iter(p.stdout.readline, ""):
                 m = pattern.search(line)
@@ -408,23 +410,23 @@ def verify_required_cutechess(testing_dir, cutechess):
                     minor = int(m.group(2))
                     patch = int(m.group(3))
     except (OSError, subprocess.SubprocessError) as e:
-        print("Unable to run cutechess-cli. Error: {}".format(str(e)))
+        print("Unable to run fast-chess. Error: {}".format(str(e)))
         return False
 
     if p.returncode != 0:
         print(
-            "Unable to run cutechess-cli. Return code: {}. Error: {}".format(
+            "Unable to run fast-chess. Return code: {}. Error: {}".format(
                 format_return_code(p.returncode), errors
             )
         )
         return False
 
     if major + minor + patch == 0:
-        print("Unable to find the version of cutechess-cli.")
+        print("Unable to find the version of fast-chess.")
         return False
 
-    if (major, minor) < (1, 2):
-        print("Requires cutechess 1.2 or higher, found version doesn't match")
+    if (major, minor) < (0, 5):
+        print("Requires cutechess 0.5 or higher, found version doesn't match")
         return False
 
     return True
@@ -443,62 +445,56 @@ def setup_cutechess(worker_dir):
         print("Unable to enter {}. Error: {}".format(testing_dir, str(e)))
         return False
 
-    cutechess = "cutechess-cli" + EXE_SUFFIX
+    cutechess = "fast-chess" + EXE_SUFFIX
 
     ret = True
 
     if not verify_required_cutechess(testing_dir, cutechess):
-        if len(EXE_SUFFIX) > 0:
-            zipball = "cutechess-cli-win.zip"
-        elif IS_MACOS:
-            zipball = "cutechess-cli-macos-64bit.zip"
-        else:
-            zipball = "cutechess-cli-linux-{}.zip".format(platform.architecture()[0])
+        tmp_dir = Path(tempfile.mkdtemp(dir=worker_dir))
         try:
-            blob = download_from_github(zipball)
-            unzip(blob, testing_dir)
+            # clone fastchess from github and build it
+            # https://github.com/Disservin/fast-chess
 
-            os.chmod(cutechess, os.stat(cutechess).st_mode | stat.S_IEXEC)
+            item_url = (
+                "https://github.com/Disservin/fast-chess/archive/refs/heads/master.zip"
+            )
+
+            clone = "git clone https://github.com/Disservin/fast-chess"
+            print("Downloading {}".format(item_url))
+            os.chdir(tmp_dir)
+            os.system(clone)
+            os.chdir(f"{tmp_dir}/fast-chess")
+
+            cmd = "make -j USE_CUTE=true"
+            with subprocess.Popen(
+                cmd,
+                shell=True,
+                env=os.environ,
+                stderr=subprocess.PIPE,
+                universal_newlines=True,
+                bufsize=1,
+                close_fds=not IS_WINDOWS,
+            ) as p:
+                errors = p.stderr.readlines()
+            if p.returncode:
+                raise WorkerException(
+                    "Executing {} failed. Error: {}".format(cmd, errors)
+                )
+
+            worker_dir = Path(__file__).resolve().parent
+            testing_dir = f"{worker_dir}/testing/cutechess-cli{EXE_SUFFIX}"
+            print(f"moving to {testing_dir}")
+            shutil.move("fast-chess" + EXE_SUFFIX, testing_dir)
+
         except Exception as e:
             print(
-                "Exception downloading or extracting {}:\n".format(zipball),
+                "Exception downloading or extracting fast-chess:\n",
                 e,
                 sep="",
                 file=sys.stderr,
             )
 
-        if not verify_required_cutechess(testing_dir, cutechess):
-            print(
-                "The downloaded cutechess-cli is not working. Trying to restore a backup copy ..."
-            )
-            bkp_cutechess_clis = sorted(
-                worker_dir.glob("_testing_*/" + cutechess),
-                key=os.path.getctime,
-                reverse=True,
-            )
-            if bkp_cutechess_clis:
-                bkp_cutechess_cli = bkp_cutechess_clis[0]
-                try:
-                    shutil.copy(bkp_cutechess_cli, testing_dir)
-                except Exception as e:
-                    print(
-                        "Unable to copy {} to {}. Error: {}".format(
-                            bkp_cutechess_cli, testing_dir, str(e)
-                        )
-                    )
-
-                if not verify_required_cutechess(testing_dir, cutechess):
-                    print(
-                        "The backup copy {} doesn't work either ...".format(
-                            bkp_cutechess_cli
-                        )
-                    )
-                    print("No suitable cutechess-cli found")
-                    ret = False
-            else:
-                print("No backup copy found")
-                print("No suitable cutechess-cli found")
-                ret = False
+        shutil.rmtree(tmp_dir)
 
     os.chdir(curr_dir)
     return ret
