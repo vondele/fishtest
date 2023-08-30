@@ -67,7 +67,7 @@ def is_64bit():
 
 
 HTTP_TIMEOUT = 30.0
-CUTECHESS_KILL_TIMEOUT = 15.0
+FASTCHESS_KILL_TIMEOUT = 15.0
 UPDATE_RETRY_TIME = 15.0
 
 RAWCONTENT_HOST = "https://raw.githubusercontent.com"
@@ -918,6 +918,7 @@ def update_pentanomial(line, rounds):
             odd = round_
             even = round_ + 1
         if odd in rounds.keys() and even in rounds.keys():
+            print("Hi there:", rounds)
             assert rounds[odd]["white"][0:3] == "New"
             assert rounds[odd]["white"] == rounds[even]["black"]
             assert rounds[odd]["black"] == rounds[even]["white"]
@@ -955,10 +956,11 @@ def validate_pentanomial(wld, rounds):
     s5 = results_to_score(rounds["pentanomial"]) + results_to_score(rounds["trinomial"])
     assert sum(LDW) == 2 * sum(rounds["pentanomial"]) + sum(rounds["trinomial"])
     epsilon = 1e-4
+    print("Here we have: ", wld, rounds, s3, s5)
     assert abs(s5 - s3) < epsilon
 
 
-def parse_cutechess_output(
+def parse_fastchess_output(
     p, current_state, remote, result, spsa_tuning, games_to_play, batch_size, tc_limit
 ):
     hash_pattern = re.compile(r"(Base|New)-[a-f0-9]+")
@@ -1032,7 +1034,7 @@ def parse_cutechess_output(
 
             validate_pentanomial(
                 wld, rounds
-            )  # check if cutechess-cli result is compatible with
+            )  # check if fast-chess result is compatible with
             # our own bookkeeping
 
             pentanomial = [
@@ -1123,7 +1125,7 @@ def parse_cutechess_output(
     return True
 
 
-def launch_cutechess(
+def launch_fastchess(
     cmd, current_state, remote, result, spsa_tuning, games_to_play, batch_size, tc_limit
 ):
     if spsa_tuning:
@@ -1154,7 +1156,7 @@ def launch_cutechess(
         w_params = []
         b_params = []
 
-    # Run cutechess-cli binary.
+    # Run fast-chess binary.
     # Stochastic rounding and probability for float N.p: (N, 1-p); (N+1, p)
     idx = cmd.index("_spsa_")
     cmd = (
@@ -1179,7 +1181,7 @@ def launch_cutechess(
         + cmd[idx + 1 :]
     )
 
-    #    print(cmd)
+    print(cmd)
     try:
         with subprocess.Popen(
             cmd,
@@ -1201,7 +1203,7 @@ def launch_cutechess(
             close_fds=not IS_WINDOWS,
         ) as p:
             try:
-                task_alive = parse_cutechess_output(
+                task_alive = parse_fastchess_output(
                     p,
                     current_state,
                     remote,
@@ -1212,15 +1214,15 @@ def launch_cutechess(
                     tc_limit,
                 )
             finally:
-                # We nicely ask cutechess-cli to stop.
+                # We nicely ask fast-chess to stop.
                 try:
                     send_sigint(p)
                 except Exception as e:
                     print("\nException in send_sigint:\n", e, sep="", file=sys.stderr)
                 # now wait...
-                print("\nWaiting for cutechess-cli to finish ... ", end="", flush=True)
+                print("\nWaiting for fast-chess to finish ... ", end="", flush=True)
                 try:
-                    p.wait(timeout=CUTECHESS_KILL_TIMEOUT)
+                    p.wait(timeout=FASTCHESS_KILL_TIMEOUT)
                 except subprocess.TimeoutExpired:
                     print("timeout", flush=True)
                     kill_process(p)
@@ -1228,12 +1230,12 @@ def launch_cutechess(
                     print("done", flush=True)
     except (OSError, subprocess.SubprocessError) as e:
         print(
-            "Exception starting cutechess:\n",
+            "Exception starting fast-chess:\n",
             e,
             sep="",
             file=sys.stderr,
         )
-        raise WorkerException("Unable to start cutechess. Error: {}".format(str(e)))
+        raise WorkerException("Unable to start fast-chess. Error: {}".format(str(e)))
 
     return task_alive
 
@@ -1249,7 +1251,7 @@ def run_games(
     clear_binaries,
     global_cache,
 ):
-    # This is the main cutechess-cli driver.
+    # This is the main fast-chess driver.
     # It is ok, and even expected, for this function to
     # raise exceptions, implicitly or explicitly, if a
     # task cannot be completed.
@@ -1317,7 +1319,7 @@ def run_games(
     start_game_index = opening_offset + input_total_games
     run_seed = int(hashlib.sha1(run["_id"].encode("utf-8")).hexdigest(), 16) % (2**30)
 
-    # Format options according to cutechess syntax.
+    # Format options according to fastchess syntax.
     def parse_options(s):
         results = []
         chunks = s.split("=")
@@ -1405,7 +1407,7 @@ def run_games(
         unzip(blob, testing_dir)
 
     # convert .epd containing FENs into .epd containing EPDs with move counters
-    # only needed as long as cutechess-cli is the game manager
+    # only needed as long as cutechess-cli is the game manager                                 TODO TODO TODO TODO  ? is this still needed ?
     if book.endswith(".epd"):
         convert_book_move_counters(testing_dir / book)
 
@@ -1424,7 +1426,7 @@ def run_games(
                 file=sys.stderr,
             )
 
-    # Add EvalFile* with full path to cutechess options, and download the networks if missing.
+    # Add EvalFile* with full path to fast-chess options, and download the networks if missing.
     for option, net in required_nets(base_engine).items():
         base_options.append("option.{}={}".format(option, net))
         establish_validated_net(remote, testing_dir, net, global_cache)
@@ -1554,11 +1556,11 @@ def run_games(
         if any(substring in book.upper() for substring in ["FRC", "960"]):
             variant = "fischerandom"
 
-        # Run cutechess binary.
-        cutechess = "cutechess-cli" + EXE_SUFFIX
+        # Run fastchess binary.
+        fastchess = "fast-chess" + EXE_SUFFIX
         cmd = (
             [
-                os.path.join(testing_dir, cutechess),
+                os.path.join(testing_dir, fastchess),
                 "-recover",
                 "-repeat",
                 "-games",
@@ -1618,7 +1620,7 @@ def run_games(
             + book_cmd
         )
 
-        task_alive = launch_cutechess(
+        task_alive = launch_fastchess(
             cmd,
             current_state,
             remote,
