@@ -455,7 +455,7 @@ def setup_fastchess(worker_dir):
 
     # build it ourselves
     try:
-        fastchess_sha = "67dc441c55e33e30273b492f23e1ae0218e386cd"
+        fastchess_sha = "29fc1002bd3ff362b3a0662a1ba0c9d261d1bc6e"
         item_url = (
             "https://api.github.com/repos/Disservin/fast-chess/zipball/" + fastchess_sha
         )
