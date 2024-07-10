@@ -446,7 +446,7 @@ def verify_required_fastchess(fastchess_path):
     return True
 
 
-def setup_fastchess(worker_dir):
+def setup_fastchess(worker_dir, compiler):
     # Create the testing directory if missing.
     testing_dir = worker_dir / "testing"
     testing_dir.mkdir(exist_ok=True)
@@ -477,7 +477,8 @@ def setup_fastchess(worker_dir):
         prefix = os.path.commonprefix([n.filename for n in file_list])
         os.chdir(tmp_dir / prefix)
 
-        cmd = "make -j USE_CUTE=true"
+        cmd = f"make -j USE_CUTE=true CXX={compiler}"
+        print(cmd)
         with subprocess.Popen(
             cmd,
             shell=True,
@@ -1492,25 +1493,25 @@ def worker():
         print("Exception verifying worker version:\n", e, sep="", file=sys.stderr)
         return 1
 
-    # Check for common tool chain issues
-    if not verify_toolchain():
-        return 1
-
-    # Make sure we have a working fast-chess
-    if not setup_fastchess(worker_dir):
-        return 1
-
-    # Check if we are running an unmodified worker
-    unmodified = verify_remote_sri(worker_dir)
-    if unmodified is None:
-        return 1
-
     # Assemble the config/options data as well as some other data in a
     # "worker_info" dictionary.
     # This data will be sent to the server when a new task is requested.
 
     compiler, major, minor, patchlevel = options.compiler
     print("Using {} {}.{}.{}".format(compiler, major, minor, patchlevel))
+
+    # Check for common tool chain issues
+    if not verify_toolchain():
+        return 1
+
+    # Make sure we have a working fast-chess
+    if not setup_fastchess(worker_dir, compiler):
+        return 1
+
+    # Check if we are running an unmodified worker
+    unmodified = verify_remote_sri(worker_dir)
+    if unmodified is None:
+        return 1
 
     uname = platform.uname()
     worker_info = {
