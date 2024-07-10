@@ -475,6 +475,7 @@ def setup_fastchess(worker_dir, compiler):
         tmp_dir = Path(tempfile.mkdtemp(dir=worker_dir))
         file_list = unzip(blob, tmp_dir)
         prefix = os.path.commonprefix([n.filename for n in file_list])
+        cd = os.getcwd()
         os.chdir(tmp_dir / prefix)
 
         cmd = f"make -j USE_CUTE=true CXX={compiler}"
@@ -494,8 +495,8 @@ def setup_fastchess(worker_dir, compiler):
             raise WorkerException("Executing {} failed. Error: {}".format(cmd, errors))
 
         shutil.move("fast-chess" + EXE_SUFFIX, testing_dir)
+        os.chdir(cd)
         shutil.rmtree(tmp_dir)
-        os.chdir(worker_dir)
 
     except Exception as e:
         print(

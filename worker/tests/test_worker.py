@@ -71,7 +71,11 @@ class workerTest(unittest.TestCase):
         self.assertTrue(worker.verify_toolchain())
 
     def test_setup_fastchess(self):
-        self.assertTrue(worker.setup_fastchess(Path.cwd()))
+        self.assertTrue(
+            worker.setup_fastchess(
+                Path.cwd(), list(worker.detect_compilers().keys())[0]
+            )
+        )
 
 
 if __name__ == "__main__":
