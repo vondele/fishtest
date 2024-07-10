@@ -918,7 +918,9 @@ def update_pentanomial(line, rounds):
             odd = round_
             even = round_ + 1
         if odd in rounds.keys() and even in rounds.keys():
-            print("Hi there:", rounds)
+            print(
+                "Hi there:", rounds
+            )  # TODO TODO https://github.com/Disservin/fast-chess/issues/532
             assert rounds[odd]["white"][0:3] == "New"
             assert rounds[odd]["white"] == rounds[even]["black"]
             assert rounds[odd]["black"] == rounds[even]["white"]
@@ -956,7 +958,9 @@ def validate_pentanomial(wld, rounds):
     s5 = results_to_score(rounds["pentanomial"]) + results_to_score(rounds["trinomial"])
     assert sum(LDW) == 2 * sum(rounds["pentanomial"]) + sum(rounds["trinomial"])
     epsilon = 1e-4
-    print("Here we have: ", wld, rounds, s3, s5)
+    print(
+        "Here we have: ", wld, rounds, s3, s5
+    )  # TODO TODO https://github.com/Disservin/fast-chess/issues/532
     assert abs(s5 - s3) < epsilon
 
 
@@ -1001,16 +1005,16 @@ def parse_fastchess_output(
             else:
                 raise WorkerException("Finished match uncleanly")
 
-        # Parse line like this:
+        # Parse line like this:                                          # TODO TODO https://github.com/Disservin/fast-chess/issues/535
         # Warning: New-SHA doesn't have option ThreatBySafePawn
         if "Warning:" in line and "doesn't have option" in line:
-            message = r'Cutechess-cli says: "{}"'.format(line)
+            message = r'fast-chess says: "{}"'.format(line)
             raise RunException(message)
 
         # Parse line like this:
         # Warning: Invalid value for option P: -354
         if "Warning:" in line and "Invalid value" in line:
-            message = r'Cutechess-cli says: "{}"'.format(line)
+            message = r'fast-chess says: "{}"'.format(line)
             raise RunException(message)
 
         # Parse line like this:
@@ -1181,7 +1185,7 @@ def launch_fastchess(
         + cmd[idx + 1 :]
     )
 
-    print(cmd)
+    # print(cmd)
     try:
         with subprocess.Popen(
             cmd,
