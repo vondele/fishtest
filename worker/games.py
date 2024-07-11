@@ -999,7 +999,7 @@ def parse_fastchess_output(
         print(line, flush=True)
 
         # Have we reached the end of the match? Then just exit.
-        if "Finished match" in line:
+        if "Saved results." in line:
             if num_games_updated == games_to_play:
                 print("Finished match cleanly")
             else:
@@ -1567,8 +1567,12 @@ def run_games(
                 os.path.join(testing_dir, fastchess),
                 "-recover",
                 "-repeat",
+                "-ratinginterval",
+                "0",
+                "-autosaveinterval",
+                "0",
                 "-games",
-                str(int(games_to_play)),
+                str(int(games_to_play) / 2),
                 "-tournament",
                 "gauntlet",
             ]
