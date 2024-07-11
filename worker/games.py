@@ -1572,7 +1572,7 @@ def run_games(
                 "-autosaveinterval",
                 "0",
                 "-games",
-                str(int(games_to_play) / 2),
+                str(int(games_to_play) // 2),
                 "-tournament",
                 "gauntlet",
             ]
