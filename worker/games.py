@@ -1545,7 +1545,9 @@ def run_games(
                 "-recover",
                 "-repeat",
                 "-games",
-                str(int(games_to_play)),
+                "2",
+                "-rounds",
+                str(int(games_to_play) // 2),
                 "-tournament",
                 "gauntlet",
             ]
