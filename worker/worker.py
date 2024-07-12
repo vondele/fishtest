@@ -457,10 +457,10 @@ def setup_fastchess(worker_dir, compiler):
 
     # build it ourselves
     try:
-        fastchess_sha = "553339ce0b4e3af03b632b400ee37a0a250eac4d"
-        username = "gahtan-syarif"
         fastchess_sha = "47930ae1a2350cdf8d3a58cba4e1128a461249b8"
         username = "Disservin"
+        fastchess_sha = "c5ae41a86e93671548f0a06107435c001d5a4222"
+        username = "gahtan-syarif"
         item_url = (
             "https://api.github.com/repos/"
             + username

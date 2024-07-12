@@ -7,6 +7,7 @@ import math
 import multiprocessing
 import os
 import platform
+import pprint
 import random
 import re
 import shutil
@@ -899,8 +900,9 @@ def update_pentanomial(line, rounds):
             odd = round_
             even = round_ + 1
         if odd in rounds.keys() and even in rounds.keys():
-            print(
-                "Hi there:", rounds
+            print("In update pentanomial")
+            pprint.pp(
+                rounds
             )  # TODO TODO https://github.com/Disservin/fast-chess/issues/532
             assert rounds[odd]["white"][0:3] == "New"
             assert rounds[odd]["white"] == rounds[even]["black"]
@@ -940,8 +942,9 @@ def validate_pentanomial(wld, rounds):
     assert sum(LDW) == 2 * sum(rounds["pentanomial"]) + sum(rounds["trinomial"])
     epsilon = 1e-4
     print(
-        "Here we have: ", wld, rounds, s3, s5
+        "In validate pentanomial: ", wld, s3, s5
     )  # TODO TODO https://github.com/Disservin/fast-chess/issues/532
+    pprint.pp(rounds)
     assert abs(s5 - s3) < epsilon
 
 
