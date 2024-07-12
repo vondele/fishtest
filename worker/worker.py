@@ -413,7 +413,7 @@ def verify_required_fastchess(fastchess_path):
         ) as p:
             errors = p.stderr.read()
             pattern = re.compile(
-                "fast-chess alpha ([0-9]*).([0-9]*).([0-9]*)"
+                "fast-chess alpha ([0-9]*).([0-9]*).([0-9]*) [0-9a-f-]* \(compiled with cutechess output\)"
             )  # TODO TODO https://github.com/Disservin/fast-chess/issues/526
             major, minor, patch = 0, 0, 0
             for line in iter(p.stdout.readline, ""):
@@ -459,7 +459,7 @@ def setup_fastchess(worker_dir, compiler):
     try:
         fastchess_sha = "553339ce0b4e3af03b632b400ee37a0a250eac4d"
         username = "gahtan-syarif"
-        fastchess_sha = "29fc1002bd3ff362b3a0662a1ba0c9d261d1bc6e"
+        fastchess_sha = "47930ae1a2350cdf8d3a58cba4e1128a461249b8"
         username = "Disservin"
         item_url = (
             "https://api.github.com/repos/"
