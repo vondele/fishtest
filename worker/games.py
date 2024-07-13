@@ -7,7 +7,6 @@ import math
 import multiprocessing
 import os
 import platform
-import pprint
 import random
 import re
 import shutil
@@ -504,6 +503,7 @@ def unzip(blob, save_dir):
     os.chdir(cd)
     return file_list
 
+
 def clang_props():
     """Parse the output of clang++ -E - -march=native -### and extract the available clang properties"""
     with subprocess.Popen(
@@ -900,10 +900,6 @@ def update_pentanomial(line, rounds):
             odd = round_
             even = round_ + 1
         if odd in rounds.keys() and even in rounds.keys():
-            print("In update pentanomial")
-            pprint.pp(
-                rounds
-            )  # TODO TODO https://github.com/Disservin/fast-chess/issues/532
             assert rounds[odd]["white"][0:3] == "New"
             assert rounds[odd]["white"] == rounds[even]["black"]
             assert rounds[odd]["black"] == rounds[even]["white"]
@@ -941,10 +937,6 @@ def validate_pentanomial(wld, rounds):
     s5 = results_to_score(rounds["pentanomial"]) + results_to_score(rounds["trinomial"])
     assert sum(LDW) == 2 * sum(rounds["pentanomial"]) + sum(rounds["trinomial"])
     epsilon = 1e-4
-    print(
-        "In validate pentanomial: ", wld, s3, s5
-    )  # TODO TODO https://github.com/Disservin/fast-chess/issues/532
-    pprint.pp(rounds)
     assert abs(s5 - s3) < epsilon
 
 
@@ -1393,7 +1385,6 @@ def run_games(
         zipball = book + ".zip"
         blob = download_from_github(zipball)
         unzip(blob, testing_dir)
-
 
     # Clean up the old networks (keeping the num_bkps most recent)
     num_bkps = 10
