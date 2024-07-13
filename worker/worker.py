@@ -42,6 +42,8 @@ from games import (
     RunException,
     WorkerException,
     backup_log,
+    cache_read,
+    cache_write,
     download_from_github,
     format_return_code,
     log,
@@ -460,7 +462,7 @@ def verify_required_fastchess(fastchess_path, fastchess_sha):
     return True
 
 
-def setup_fastchess(worker_dir, compiler):
+def setup_fastchess(worker_dir, compiler, concurrency, global_cache):
     # Create the testing directory if missing.
     testing_dir = worker_dir / "testing"
     testing_dir.mkdir(exist_ok=True)
@@ -485,15 +487,27 @@ def setup_fastchess(worker_dir, compiler):
 
         print("Building fast chess from sources at {}".format(item_url))
 
-        blob = requests_get(item_url).content
+        should_cache = False
+        blob = cache_read(global_cache, fastchess_sha + ".zip")
+
+        if blob is None:
+            print("Downloading {}".format(item_url))
+            blob = requests_get(item_url).content
+            should_cache = True
+        else:
+            print("Using {} from global cache".format(fastchess_sha + ".zip"))
 
         tmp_dir = Path(tempfile.mkdtemp(dir=worker_dir))
         file_list = unzip(blob, tmp_dir)
         prefix = os.path.commonprefix([n.filename for n in file_list])
+
+        if should_cache:
+            cache_write(global_cache, fastchess_sha + ".zip", blob)
+
         cd = os.getcwd()
         os.chdir(tmp_dir / prefix)
 
-        cmd = f"make -j USE_CUTE=true CXX={compiler} GIT_SHA={fastchess_sha[0:8]} GIT_DATE=010101"
+        cmd = f"make -j{concurrency} USE_CUTE=true CXX={compiler} GIT_SHA={fastchess_sha[0:8]} GIT_DATE=010101"
         print(cmd)
         with subprocess.Popen(
             cmd,
@@ -1521,7 +1535,9 @@ def worker():
         return 1
 
     # Make sure we have a working fast-chess
-    if not setup_fastchess(worker_dir, compiler):
+    if not setup_fastchess(
+        worker_dir, compiler, options.concurrency, options.global_cache
+    ):
         return 1
 
     # Check if we are running an unmodified worker
