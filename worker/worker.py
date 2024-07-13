@@ -394,7 +394,7 @@ def get_credentials(config, options, args):
     return username, password
 
 
-def verify_required_fastchess(fastchess_path):
+def verify_required_fastchess(fastchess_path, fastchess_sha):
     # Verify that fastchess is working and has the required minimum version.
 
     if not fastchess_path.exists():
@@ -413,7 +413,7 @@ def verify_required_fastchess(fastchess_path):
         ) as p:
             errors = p.stderr.read()
             pattern = re.compile(
-                "fast-chess alpha ([0-9]*).([0-9]*).([0-9]*) [0-9a-f-]* \(compiled with cutechess output\)"
+                "fast-chess alpha ([0-9]*).([0-9]*).([0-9]*) [0-9]*-([0-9a-f-]*) \(compiled with cutechess output\)"
             )  # TODO TODO https://github.com/Disservin/fast-chess/issues/526
             major, minor, patch = 0, 0, 0
             for line in iter(p.stdout.readline, ""):
@@ -423,6 +423,7 @@ def verify_required_fastchess(fastchess_path):
                     major = int(m.group(1))
                     minor = int(m.group(2))
                     patch = int(m.group(3))
+                    short_sha = m.group(4)
     except (OSError, subprocess.SubprocessError) as e:
         print("Unable to run fast-chess. Error: {}".format(str(e)))
         return False
@@ -443,6 +444,19 @@ def verify_required_fastchess(fastchess_path):
         print("Requires fast-chess 0.9 or higher, found version doesn't match")
         return False
 
+    if len(short_sha) < 7:
+        print(
+            "Unable to find a suitable sha of length 7 or more in the fast-chess version."
+        )
+
+    if not fastchess_sha.startswith(short_sha):
+        print(
+            "fast-chess sha {} required but the version shows {}".format(
+                fastchess_sha, short_sha
+            )
+        )
+        return False
+
     return True
 
 
@@ -451,16 +465,17 @@ def setup_fastchess(worker_dir, compiler):
     testing_dir = worker_dir / "testing"
     testing_dir.mkdir(exist_ok=True)
 
+    fastchess_sha = "47930ae1a2350cdf8d3a58cba4e1128a461249b8"
+    username = "Disservin"
+    fastchess_sha = "8ee66a8449ac09e72abe2b02227075a094c792f4"
+    username = "gahtan-syarif"
+
     fastchess = "fast-chess" + EXE_SUFFIX
-    if verify_required_fastchess(testing_dir / fastchess):
+    if verify_required_fastchess(testing_dir / fastchess, fastchess_sha):
         return True
 
     # build it ourselves
     try:
-        fastchess_sha = "47930ae1a2350cdf8d3a58cba4e1128a461249b8"
-        username = "Disservin"
-        fastchess_sha = "8ee66a8449ac09e72abe2b02227075a094c792f4"
-        username = "gahtan-syarif"
         item_url = (
             "https://api.github.com/repos/"
             + username
@@ -478,7 +493,7 @@ def setup_fastchess(worker_dir, compiler):
         cd = os.getcwd()
         os.chdir(tmp_dir / prefix)
 
-        cmd = f"make -j USE_CUTE=true CXX={compiler}"
+        cmd = f"make -j USE_CUTE=true CXX={compiler} GIT_SHA={fastchess_sha[0:8]} GIT_DATE=010101"
         print(cmd)
         with subprocess.Popen(
             cmd,
@@ -494,7 +509,7 @@ def setup_fastchess(worker_dir, compiler):
         if p.returncode:
             raise WorkerException("Executing {} failed. Error: {}".format(cmd, errors))
 
-        shutil.move("fast-chess" + EXE_SUFFIX, testing_dir)
+        shutil.copy("fast-chess" + EXE_SUFFIX, testing_dir)
         os.chdir(cd)
         shutil.rmtree(tmp_dir)
 
@@ -506,7 +521,7 @@ def setup_fastchess(worker_dir, compiler):
             file=sys.stderr,
         )
 
-    return verify_required_fastchess(testing_dir / fastchess)
+    return verify_required_fastchess(testing_dir / fastchess, fastchess_sha)
 
 
 def validate(config, schema):
