@@ -497,7 +497,7 @@ def setup_fastchess(worker_dir, compiler, concurrency, global_cache):
         else:
             print("Using {} from global cache".format(fastchess_sha + ".zip"))
 
-        tmp_dir = Path(tempfile.mkdtemp(dir=worker_dir))
+        tmp_dir = Path(tempfile.mkdtemp(dir=testing_dir))
         file_list = unzip(blob, tmp_dir)
         prefix = os.path.commonprefix([n.filename for n in file_list])
 

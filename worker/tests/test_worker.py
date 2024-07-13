@@ -73,7 +73,7 @@ class workerTest(unittest.TestCase):
     def test_setup_fastchess(self):
         self.assertTrue(
             worker.setup_fastchess(
-                Path.cwd(), list(worker.detect_compilers().keys())[0]
+                Path.cwd(), list(worker.detect_compilers().keys())[0], 1, ""
             )
         )
 
