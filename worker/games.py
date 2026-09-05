@@ -1798,9 +1798,6 @@ def run_games(
             + ["-srand", f"{run_seed}"]
             + (
                 [
-                    "-resign",
-                    "movecount=3",
-                    "score=600",
                     "-draw",
                     "movenumber=34",
                     "movecount=8",
